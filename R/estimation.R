@@ -1,5 +1,5 @@
-MODEL<-'JD3_DfmModel'
-MODELESTIMATION<-'JD3_SsfModelEstimation'
+MODEL <- "JD3_DfmModel"
+MODELESTIMATION <- "JD3_SsfModelEstimation"
 
 #' Create Dynamic Factor Model
 #'
@@ -38,28 +38,31 @@ MODELESTIMATION<-'JD3_SsfModelEstimation'
 #' @export
 #'
 #' @examples
-#' dfm_model <- model(nfactors=2,
-#'                    nlags=2,
-#'                    factors_type = c("M", "M", "YoY", "M", "Q"),
-#'                    factors_loading = matrix(data=TRUE, 5, 2),
-#'                    var_init = "Unconditional")
+#' dfm_model <- model(
+#'     nfactors = 2,
+#'     nlags = 2,
+#'     factors_type = c("M", "M", "YoY", "M", "Q"),
+#'     factors_loading = matrix(data = TRUE, 5, 2),
+#'     var_init = "Unconditional"
+#' )
 #'
-model<-function(nfactors, nlags, factors_type, factors_loading, var_init = c("Unconditional", "Zero"), mVariance = NULL){
+model <- function(nfactors, nlags, factors_type, factors_loading, var_init = c("Unconditional", "Zero"), mVariance = NULL) {
+    var_init <- match.arg(var_init)
 
-  var_init<-match.arg(var_init)
+    jfactors_loading <- rjd3toolkit::.r2jd_matrix(factors_loading)
+    jmodel <- .jcall(
+        "jdplus/dfm/base/r/DynamicFactorModels",
+        "Ljdplus/dfm/base/core/DynamicFactorModel;",
+        "model",
+        as.integer(nfactors),
+        as.integer(nlags),
+        .jarray(as.character(factors_type)),
+        jfactors_loading,
+        .jnew("java/lang/String", as.character(var_init)),
+        .jnull("[D")
+    )
 
-  jfactors_loading <- rjd3toolkit::.r2jd_matrix(factors_loading)
-  jmodel<-.jcall("jdplus/dfm/base/r/DynamicFactorModels",
-                 "Ljdplus/dfm/base/core/DynamicFactorModel;",
-                 "model",
-                 as.integer(nfactors),
-                 as.integer(nlags),
-                 .jarray(as.character(factors_type)),
-                 jfactors_loading,
-                 .jnew("java/lang/String", as.character(var_init)),
-                 .jnull("[D"))
-
-  return(rjd3toolkit::.jd3_object(jmodel, MODEL))
+    return(rjd3toolkit::.jd3_object(jmodel, MODEL))
 }
 
 #' Estimate DFM with Principal components Analysis
@@ -77,39 +80,46 @@ model<-function(nfactors, nlags, factors_type, factors_loading, var_init = c("Un
 #'
 #' @examples
 #' set.seed(100)
-#' data<-ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010,1))
-#' data[100,1]<-data[99:100,2]<-data[(1:100)[-seq(3,100,3)],5]<-NA
-#' dfm_model <- model(nfactors=2,
-#'                    nlags=2,
-#'                    factors_type = c("M", "M", "YoY", "M", "Q"),
-#'                    factors_loading = matrix(data=TRUE, 5, 2),
-#'                    var_init = "Unconditional")
-#' rslt_pca<-estimate_pca(dfm_model, data)
+#' data <- ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010, 1))
+#' data[100, 1] <- data[99:100, 2] <- data[(1:100)[-seq(3, 100, 3)], 5] <- NA
+#' dfm_model <- model(
+#'     nfactors = 2,
+#'     nlags = 2,
+#'     factors_type = c("M", "M", "YoY", "M", "Q"),
+#'     factors_loading = matrix(data = TRUE, 5, 2),
+#'     var_init = "Unconditional"
+#' )
+#' rslt_pca <- estimate_pca(dfm_model, data)
 #'
-estimate_pca<-function(dfmModel, data, standardized = FALSE, n_out = 12){
-  freq<-frequency(data)
-  start<-start(data)
+estimate_pca <- function(dfmModel, data, standardized = FALSE, n_out = 12) {
+    freq <- frequency(data)
+    start <- start(data)
 
-  jdata<-rjd3toolkit::.r2jd_matrix(data)
+    jdata <- rjd3toolkit::.r2jd_matrix(data)
 
-  jpca<-.jcall("jdplus/dfm/base/r/DynamicFactorModels",
-               "Ljdplus/dfm/base/core/DfmResults;",
-               "estimate_PCA",
-               dfmModel$internal,
-               jdata,
-               as.integer(freq),
-               .jarray(as.integer(start)),
-               standardized,
-               as.integer(n_out))
+    jpca <- .jcall(
+        "jdplus/dfm/base/r/DynamicFactorModels",
+        "Ljdplus/dfm/base/core/DfmResults;",
+        "estimate_PCA",
+        dfmModel$internal,
+        jdata,
+        as.integer(freq),
+        .jarray(as.integer(start)),
+        standardized,
+        as.integer(n_out)
+    )
 
-  return(
-    structure(list(
-      series_names=colnames(data),
-      start=start,
-      freq=freq,
-      jestimates=rjd3toolkit::.jd3_object(jpca, result = TRUE)),
-      class = MODELESTIMATION)
-  )
+    return(
+        structure(
+            list(
+                series_names = colnames(data),
+                start = start,
+                freq = freq,
+                jestimates = rjd3toolkit::.jd3_object(jpca, result = TRUE)
+            ),
+            class = MODELESTIMATION
+        )
+    )
 }
 
 #' Estimate DFM with Expectations-Maximization algorithm
@@ -134,43 +144,50 @@ estimate_pca<-function(dfmModel, data, standardized = FALSE, n_out = 12){
 #'
 #' @examples
 #' set.seed(100)
-#' data<-ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010,1))
-#' data[100,1]<-data[99:100,2]<-data[(1:100)[-seq(3,100,3)],5]<-NA
-#' dfm_model <- model(nfactors=2,
-#'                    nlags=2,
-#'                    factors_type = c("M", "M", "YoY", "M", "Q"),
-#'                    factors_loading = matrix(data=TRUE, 5, 2),
-#'                    var_init = "Unconditional")
-#' rslt_em<-estimate_em(dfm_model, data)
+#' data <- ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010, 1))
+#' data[100, 1] <- data[99:100, 2] <- data[(1:100)[-seq(3, 100, 3)], 5] <- NA
+#' dfm_model <- model(
+#'     nfactors = 2,
+#'     nlags = 2,
+#'     factors_type = c("M", "M", "YoY", "M", "Q"),
+#'     factors_loading = matrix(data = TRUE, 5, 2),
+#'     var_init = "Unconditional"
+#' )
+#' rslt_em <- estimate_em(dfm_model, data)
 #'
-estimate_em<-function(dfmModel, data, standardized = FALSE, n_out = 12,
-                      pca_init = TRUE, max_iter = 100, eps = 1e-9){
-  freq<-frequency(data)
-  start<-start(data)
+estimate_em <- function(dfmModel, data, standardized = FALSE, n_out = 12,
+                        pca_init = TRUE, max_iter = 100, eps = 1e-9) {
+    freq <- frequency(data)
+    start <- start(data)
 
-  jdata<-rjd3toolkit::.r2jd_matrix(data)
+    jdata <- rjd3toolkit::.r2jd_matrix(data)
 
-  jem<-.jcall("jdplus/dfm/base/r/DynamicFactorModels",
-               "Ljdplus/dfm/base/core/DfmResults;",
-               "estimate_EM",
-               dfmModel$internal,
-               jdata,
-               as.integer(freq),
-               .jarray(as.integer(start)),
-               standardized,
-               as.integer(n_out),
-               pca_init,
-               as.integer(max_iter),
-               as.numeric(eps))
+    jem <- .jcall(
+        "jdplus/dfm/base/r/DynamicFactorModels",
+        "Ljdplus/dfm/base/core/DfmResults;",
+        "estimate_EM",
+        dfmModel$internal,
+        jdata,
+        as.integer(freq),
+        .jarray(as.integer(start)),
+        standardized,
+        as.integer(n_out),
+        pca_init,
+        as.integer(max_iter),
+        as.numeric(eps)
+    )
 
-  return(
-    structure(list(
-      series_names=colnames(data),
-      start=start,
-      freq=freq,
-      jestimates=rjd3toolkit::.jd3_object(jem, result = TRUE)),
-      class = MODELESTIMATION)
-  )
+    return(
+        structure(
+            list(
+                series_names = colnames(data),
+                start = start,
+                freq = freq,
+                jestimates = rjd3toolkit::.jd3_object(jem, result = TRUE)
+            ),
+            class = MODELESTIMATION
+        )
+    )
 }
 
 
@@ -215,53 +232,58 @@ estimate_em<-function(dfmModel, data, standardized = FALSE, n_out = 12,
 #'
 #' @examples
 #' set.seed(100)
-#' data<-ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010,1))
-#' data[100,1]<-data[99:100,2]<-data[(1:100)[-seq(3,100,3)],5]<-NA
-#' dfm_model <- model(nfactors=2,
-#'                    nlags=2,
-#'                    factors_type = c("M", "M", "YoY", "M", "Q"),
-#'                    factors_loading = matrix(data=TRUE, 5, 2),
-#'                    var_init = "Unconditional")
-#' rslt_ml<-estimate_ml(dfm_model, data)
+#' data <- ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010, 1))
+#' data[100, 1] <- data[99:100, 2] <- data[(1:100)[-seq(3, 100, 3)], 5] <- NA
+#' dfm_model <- model(
+#'     nfactors = 2,
+#'     nlags = 2,
+#'     factors_type = c("M", "M", "YoY", "M", "Q"),
+#'     factors_loading = matrix(data = TRUE, 5, 2),
+#'     var_init = "Unconditional"
+#' )
+#' rslt_ml <- estimate_ml(dfm_model, data)
 #'
-estimate_ml<-function(dfmModel, data, standardized = FALSE, n_out = 12,
-                      pca_init = TRUE, em_init = TRUE, em_max_iter = 100,
-                      em_eps = 1e-9, max_iter = 1000, max_block_iter = 5,
-                      simpl_model_iter = 15, independent_var_shocks = FALSE,
-                      mixedEstimation = TRUE, eps=1e-9){
-  freq<-frequency(data)
-  start<-start(data)
+estimate_ml <- function(dfmModel, data, standardized = FALSE, n_out = 12,
+                        pca_init = TRUE, em_init = TRUE, em_max_iter = 100,
+                        em_eps = 1e-9, max_iter = 1000, max_block_iter = 5,
+                        simpl_model_iter = 15, independent_var_shocks = FALSE,
+                        mixedEstimation = TRUE, eps = 1e-9) {
+    freq <- frequency(data)
+    start <- start(data)
 
-  jdata<-rjd3toolkit::.r2jd_matrix(data)
+    jdata <- rjd3toolkit::.r2jd_matrix(data)
 
-  jml<-.jcall("jdplus/dfm/base/r/DynamicFactorModels",
-              "Ljdplus/dfm/base/core/DfmResults;",
-              "estimate_ML",
-              dfmModel$internal,
-              jdata,
-              as.integer(freq),
-              .jarray(as.integer(start)),
-              standardized,
-              as.integer(n_out),
-              pca_init,
-              em_init,
-              as.integer(em_max_iter),
-              as.numeric(em_eps),
-              as.integer(max_iter),
-              as.integer(max_block_iter),
-              as.integer(simpl_model_iter),
-              independent_var_shocks,
-              mixedEstimation,
-              as.numeric(eps))
+    jml <- .jcall(
+        "jdplus/dfm/base/r/DynamicFactorModels",
+        "Ljdplus/dfm/base/core/DfmResults;",
+        "estimate_ML",
+        dfmModel$internal,
+        jdata,
+        as.integer(freq),
+        .jarray(as.integer(start)),
+        standardized,
+        as.integer(n_out),
+        pca_init,
+        em_init,
+        as.integer(em_max_iter),
+        as.numeric(em_eps),
+        as.integer(max_iter),
+        as.integer(max_block_iter),
+        as.integer(simpl_model_iter),
+        independent_var_shocks,
+        mixedEstimation,
+        as.numeric(eps)
+    )
 
-  return(
-    structure(list(
-      series_names=colnames(data),
-      start=start,
-      freq=freq,
-      jestimates=rjd3toolkit::.jd3_object(jml, result = TRUE)),
-      class = MODELESTIMATION)
+    return(
+        structure(
+            list(
+                series_names = colnames(data),
+                start = start,
+                freq = freq,
+                jestimates = rjd3toolkit::.jd3_object(jml, result = TRUE)
+            ),
+            class = MODELESTIMATION
+        )
     )
 }
-
-
