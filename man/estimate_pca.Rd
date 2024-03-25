@@ -27,13 +27,15 @@ Estimate DFM with Principal components Analysis
 }
 \examples{
 set.seed(100)
-data<-ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010,1))
-data[100,1]<-data[99:100,2]<-data[(1:100)[-seq(3,100,3)],5]<-NA
-dfm_model <- model(nfactors=2,
-                   nlags=2,
-                   factors_type = c("M", "M", "YoY", "M", "Q"),
-                   factors_loading = matrix(data=TRUE, 5, 2),
-                   var_init = "Unconditional")
-rslt_pca<-estimate_pca(dfm_model, data)
+data <- ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010, 1))
+data[100, 1] <- data[99:100, 2] <- data[(1:100)[-seq(3, 100, 3)], 5] <- NA
+dfm_model <- model(
+    nfactors = 2,
+    nlags = 2,
+    factors_type = c("M", "M", "YoY", "M", "Q"),
+    factors_loading = matrix(data = TRUE, 5, 2),
+    var_init = "Unconditional"
+)
+rslt_pca <- estimate_pca(dfm_model, data)
 
 }

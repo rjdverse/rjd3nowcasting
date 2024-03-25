@@ -1,0 +1,112 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%", 
+  fig.align = "center",
+  fig.dim = c(7,4) * 1.4
+)
+```
+
+# rjd3nowcasting
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+## Overview
+
+Nowcasting is often defined as the prediction of the present, the very near future and the very recent past. 
+
+rjd3nowcasting provides helps to operationalize the process of nowcasting. This first version can be used to specify and estimate dynamic factor models. 
+A later version is expected to include the concept of "news" similar to the [Nowcasting plugin](https://github.com/nbbrd/jdemetra-nowcasting/tree/master) 
+of the Graphical User Interface of JDemetra+ v2.
+
+## Installation
+
+To get the current stable version (from the latest release):
+
+```{r, echo = TRUE, eval = FALSE}
+# install.packages("remotes")
+remotes::install_github("rjdemetra/rjd3toolkit@*release")
+remotes::install_github("rjdemetra/rjd3nowcasting@*release")
+```
+
+To get the current development version from GitHub:
+
+```{r, echo = TRUE, eval = FALSE}
+# install.packages("remotes")
+remotes::install_github("rjdemetra/rjd3nowcasting")
+```
+
+
+## Usage
+
+```{r, echo = TRUE, eval = TRUE}
+library("rjd3nowcasting")
+```
+
+
+### Input
+
+```{r, echo = TRUE, eval = TRUE}
+set.seed(100)
+data <- ts(
+    data = matrix(rnorm(500), 100, 5), 
+    frequency = 12, 
+    start = c(2010, 1)
+)
+data[100, 1] <- data[99:100, 2] <- data[(1:100)[-seq(3, 100, 3)], 5] <- NA
+```
+
+
+### Model
+
+```{r, echo = TRUE, eval = TRUE}
+dfm_model <- model(
+    nfactors = 2,
+    nlags = 2,
+    factors_type = c("M", "M", "YoY", "M", "Q"),
+    factors_loading = matrix(data = TRUE, 5, 2),
+    var_init = "Unconditional"
+)
+```
+
+
+### Estimation
+
+```{r, echo = TRUE, eval = TRUE}
+rslt_ml <- estimate_ml(dfm_model, data)
+# or rslt_em<-estimate_em(dfm_model, data)
+# or rslt_pca<-estimate_pca(dfm_model, data)
+```
+
+
+### Results
+
+```{r, echo = TRUE, eval = TRUE}
+fcst <- get_forecasts(rslt_ml, nf = 2, forecasts_only = TRUE)
+params <- get_parameters(rslt_ml)
+factors <- get_factors(rslt_ml)
+# ...
+
+print(rslt_ml)
+summary(rslt_ml)
+plot(rslt_ml)
+```
+
+
+## Contributing
+
+Any contribution is welcome and should be done through pull requests and/or issues.
+
+
+## Licensing
+
+The code of this project is licensed under the [European Union Public Licence (EUPL)](https://joinup.ec.europa.eu/page/eupl-text-11-12).
