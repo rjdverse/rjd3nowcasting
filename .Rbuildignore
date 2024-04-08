@@ -1,2 +1,5 @@
 ^rjd3nowcasting\.Rproj$
 ^\.Rproj\.user$
+^\.github$
+^LICENSE$
+^README\.Rmd$

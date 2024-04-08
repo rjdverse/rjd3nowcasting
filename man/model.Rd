@@ -58,10 +58,12 @@ an object of class 'JD3_DfmModel'
 Create Dynamic Factor Model
 }
 \examples{
-dfm_model <- model(nfactors=2,
-                   nlags=2,
-                   factors_type = c("M", "M", "YoY", "M", "Q"),
-                   factors_loading = matrix(data=TRUE, 5, 2),
-                   var_init = "Unconditional")
+dfm_model <- model(
+    nfactors = 2,
+    nlags = 2,
+    factors_type = c("M", "M", "YoY", "M", "Q"),
+    factors_loading = matrix(data = TRUE, 5, 2),
+    var_init = "Unconditional"
+)
 
 }
