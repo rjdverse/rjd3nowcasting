@@ -11,9 +11,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.0.0] - 2023-12-21
 
-### Changes 
+### Changed
 
-*update version number
+* update version number
 
 
 [Unreleased]: https://github.com/rjdemetra/rjd3nowcasting/compare/v1.0.0...HEAD
