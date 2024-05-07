@@ -16,5 +16,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 * update version number
 
 
-[Unreleased]: https://github.com/rjdemetra/rjd3nowcasting/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/rjdemetra/rjd3nowcasting/releases/tag/v1.0.0
+[Unreleased]: https://github.com/rjdverse/rjd3nowcasting/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/rjdverse/rjd3nowcasting/releases/tag/v1.0.0
