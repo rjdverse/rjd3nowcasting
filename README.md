@@ -116,10 +116,12 @@ plot(rslt_ml)
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" />
 
-## Contributing
+## Package Maintenance and contributing
 
 Any contribution is welcome and should be done through pull requests
-and/or issues.
+and/or issues. pull requests should include **updated tests** and
+**updated documentation**. If functionality is changed, docstrings
+should be added or updated.
 
 ## Licensing
 
