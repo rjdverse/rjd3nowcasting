@@ -25,7 +25,7 @@ Suggests:
     knitr,
     rmarkdown
 Roxygen: list(markdown = TRUE)
-BugReports: https://github.com/rjdverse/rjd3rjd3nowcasting/issues
+BugReports: https://github.com/rjdverse/rjd3nowcasting/issues
 Encoding: UTF-8
 Collate: 
     'estimation.R'
