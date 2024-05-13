@@ -19,24 +19,24 @@ model(
 \item{nlags}{Integer. Number of lags in VAR.}
 
 \item{factors_type}{Character vector. Respecting the order of the series in
- the input data, you must refer here the link between the (transformed)
- series and the factors. Three options are possible:
+the input data, you must refer here the link between the (transformed)
+series and the factors. Three options are possible:
 \itemize{
-  \item{"M"}{Variables expressed in terms of monthly growth rates can be
-  linked to a factor representing the underlying monthly growth rate of the
-  economy if "M" is selected}
-  \item{"Q"}{Monthly or quarterly variables that are correlated with the the
-  underlying quarterly growth rate of the economy can be linked to a
-  weighted average of the factors representing the underlying monthly
-  growth rate of the economy. Such a weighted average is meant to represent
-  quarterly growth rates, and it is implemented by selecting "Q"}
-  \item{"YoY"}{The variables can also be linked to the cumulative sum of the
-  last 12 monthly factors. If the model is designed in such a way that the
-  monthly factors represent monthly growth rates, the resulting cumulative
-  sum boils down to the year-on-year growth rate. Thus, variables expressed
-  in terms of year-on-year growth rates or surveys that are correlated with
-  the year-on-year growth rates of the reference series should be linked to
-  the factors using "YoY".}
+\item{"M"}{Variables expressed in terms of monthly growth rates can be
+linked to a factor representing the underlying monthly growth rate of the
+economy if "M" is selected}
+\item{"Q"}{Monthly or quarterly variables that are correlated with the the
+underlying quarterly growth rate of the economy can be linked to a
+weighted average of the factors representing the underlying monthly
+growth rate of the economy. Such a weighted average is meant to represent
+quarterly growth rates, and it is implemented by selecting "Q"}
+\item{"YoY"}{The variables can also be linked to the cumulative sum of the
+last 12 monthly factors. If the model is designed in such a way that the
+monthly factors represent monthly growth rates, the resulting cumulative
+sum boils down to the year-on-year growth rate. Thus, variables expressed
+in terms of year-on-year growth rates or surveys that are correlated with
+the year-on-year growth rates of the reference series should be linked to
+the factors using "YoY".}
 }}
 
 \item{factors_loading}{Boolean matrix. It represents the factor loading
