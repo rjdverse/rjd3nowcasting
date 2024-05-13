@@ -24,9 +24,8 @@ LazyData: TRUE
 Suggests:
     knitr,
     rmarkdown
-RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)
-BugReports: https://github.com/rjdverse/rjd3rjd3nowcasting/issues
+BugReports: https://github.com/rjdverse/rjd3nowcasting/issues
 Encoding: UTF-8
 Collate: 
     'estimation.R'
