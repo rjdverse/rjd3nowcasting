@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.rjdemetra.rjd3nowcasting</groupId>
+    <groupId>com.github.rjdverse.rjd3nowcasting</groupId>
     <artifactId>rjd3nowcasting</artifactId>
     <version>ignore_version</version>
     <packaging>pom</packaging>
@@ -38,50 +38,20 @@
 
     <build>
         <directory>${project.basedir}/inst/java</directory>
-        <plugins>
-            <plugin>
-                <groupId>com.github.nbbrd.heylogs</groupId>
-                <artifactId>heylogs-maven-plugin</artifactId>
-                <version>0.7.2</version>
-                <executions>
-                    <execution>
-                        <id>check-changelog</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <inputFile>NEWS.md</inputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.4.1</version>
-                <executions>
-                    <execution>
-                        <id>check-project</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireFilesExist>
-                                    <files>
-                                        <file>${project.basedir}/.gitignore</file>
-                                        <file>${project.basedir}/.Rbuildignore</file>
-                                        <file>${project.basedir}/NEWS.md</file>
-                                        <file>${project.basedir}/LICENSE</file>
-                                        <file>${project.basedir}/README.md</file>
-                                    </files>
-                                </requireFilesExist>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.simplify4u.plugins</groupId>
+                    <artifactId>pgpverify-maven-plugin</artifactId>
+                    <version>1.17.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.6.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <profiles>
@@ -93,7 +63,6 @@
                     <plugin>
                         <groupId>org.simplify4u.plugins</groupId>
                         <artifactId>pgpverify-maven-plugin</artifactId>
-                        <version>1.17.0</version>
                         <executions>
                             <execution>
                                 <id>check-signatures</id>
@@ -110,7 +79,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
-                        <version>3.6.1</version>
                         <executions>
                             <execution>
                                 <id>copy-jars</id>
