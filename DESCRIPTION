@@ -1,23 +1,27 @@
 Package: rjd3nowcasting
 Type: Package
 Title: Nowcasting with 'JDemetra+ 3.0'
-Version: 1.0.0
+Version: 2.0.0
 Authors@R: 
     person(given = "Corentin",
            family = "Lemasson",
            role = c("aut", "cre"),
            email = "corentin.lemasson@nbb.be")
 Description: Interface around 'JDemetra+ 3.x' 
-             (<https://github.com/jdemetra/jdemetra-core>), STACE project.
-	     It defines and estimate a Dynamic Factor Model with the
-             purpose of Nowcasting. 	
+             (<https://github.com/jdemetra/jdplus-nowcasting>), TSACE project.
+	     It defines and estimates Dynamic Factor Models with the
+             purpose of Nowcasting. News analysis is included in this second version.	
 Depends:
-  R (>= 3.6.0)
+  R (>= 4.1.0)
 Imports:
   rJava (>= 1.0-6),
-  rjd3toolkit (>= 3.2.1)
-SystemRequirements: Java JRE 17 or higher
+  rjd3toolkit (>= 3.2.2)
+Remotes:
+  github::rjdverse/rjd3nowcasting
+SystemRequirements: Java (>= 17)
 License: EUPL
+URL: https://github.com/rjdverse/rjd3nowcasting
+BugReports: https://github.com/rjdverse/rjd3nowcasting/issues
 Encoding: UTF-8
 Collate: 
     'estimation.R'
@@ -25,3 +29,7 @@ Collate:
     'results.R'
     'zzz.R'
 RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
