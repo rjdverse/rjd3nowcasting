@@ -1,30 +1,26 @@
 Package: rjd3nowcasting
 Type: Package
-Title: Nowcasting with 'JDemetra+ 3.x'
-Version: 1.0.0
+Title: Nowcasting with 'JDemetra+ 3.0'
+Version: 2.0.0
 Authors@R: 
     person(given = "Corentin",
            family = "Lemasson",
            role = c("aut", "cre"),
            email = "corentin.lemasson@nbb.be")
-Description: R Interface to 'JDemetra+ 3.x' (<https://github.com/jdemetra>) time series analysis software.
-	     It defines and estimates a Dynamic Factor Model with the
-             purpose of Nowcasting. 	
+Description: Interface around 'JDemetra+ 3.x' 
+             (<https://github.com/jdemetra/jdplus-nowcasting>), TSACE project.
+	     It defines and estimates Dynamic Factor Models with the
+             purpose of Nowcasting. News analysis is included in this second version.	
 Depends:
   R (>= 4.1.0)
 Imports:
   rJava (>= 1.0-6),
-  rjd3toolkit (>= 3.2.1)
+  rjd3toolkit (>= 3.2.2)
 Remotes:
-  github::rjdverse/rjd3toolkit
+  github::rjdverse/rjd3nowcasting
 SystemRequirements: Java (>= 17)
 License: EUPL
-URL: https://github.com/rjdverse/rjd3nowcasting, https://rjdverse.github.io/rjd3nowcasting/
-LazyData: TRUE
-Suggests:
-    knitr,
-    rmarkdown
-Roxygen: list(markdown = TRUE)
+URL: https://github.com/rjdverse/rjd3nowcasting
 BugReports: https://github.com/rjdverse/rjd3nowcasting/issues
 Encoding: UTF-8
 Collate: 
@@ -32,4 +28,8 @@ Collate:
     'news.R'
     'results.R'
     'zzz.R'
-RoxygenNote: 7.3.1
+RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
