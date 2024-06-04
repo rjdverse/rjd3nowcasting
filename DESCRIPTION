@@ -20,7 +20,8 @@ Remotes:
   github::rjdverse/rjd3nowcasting
 SystemRequirements: Java (>= 17)
 License: EUPL
-URL: https://github.com/rjdverse/rjd3nowcasting
+URL: https://github.com/rjdverse/rjd3nowcasting,
+    https://rjdverse.github.io/rjd3nowcasting/
 BugReports: https://github.com/rjdverse/rjd3nowcasting/issues
 Encoding: UTF-8
 Collate: 
