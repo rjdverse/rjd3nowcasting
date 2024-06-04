@@ -1,0 +1,290 @@
+---
+title: "Nowcasting with 'JDemetra+ v3.x'"
+output: 
+  html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Nowcasting with 'JDemetra+ v3.x'}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+author: Corentin Lemasson
+abstract: Nowcasting is often defined as the prediction of the present, the very near future and the very recent past. This R package relies on JDemetra+ v3.x algorithms to help operationalizing the process of nowcasting. It can be used to specify and estimate Dynamic Factor Models and visualize how the real-time dataflow updates expectations, as for instance in [Banbura and Modugno (2010)](https://www.ecb.europa.eu/pub/pdf/scpwps/ecbwp1189.pdf)
+---
+
+```{r setup vignette, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    eval = FALSE,
+    comment = "#>"
+)
+```
+
+
+# Introduction
+
+This package can be use to specify and estimate Dynamic Factor Models in a very efficient way to provide consistent forecasts. Recent version of the package also includes news analysis. Analyzing news, which are defined as the discrepancy between the newly released figures and its forecasts, helps to interpret forecast revisions. As mentioned by Banbura and Modugno (2010), it enables us to produce statements like “the forecast was revised up by ... because of higher than expected release of ...”.  
+
+This R package uses the efficient libraries of [JDemetra+ v3](https://github.com/jdemetra/jdplus-nowcasting). The way the package was conceived is inspired by the [GUI add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for JDemetra+ V2 and it provides about the same functionality (except for the real-time simulation), but in the flexible R environment.       
+
+
+# Installation settings
+
+This package relies on the specific Java libraries of [JDemetra+ v3](https://github.com/jdemetra/jdplus-nowcasting) and on the package [rjd3toolkit](https://github.com/rjdemetra/rjd3toolkit) of [rjdverse](https://github.com/rjdverse). Prior the installation, you must ensure to have a Java version >= 17.0 on your computer. If you need to use a portable version of Java to fill this request, you can follow the instructions in the [installation manual](https://jdemetra-new-documentation.netlify.app/#Rconfig).
+
+In addition to a Java version >= 17.0, you must have a recent version of the R packages rJava (>= 1.0.6) and RProtobuf (>=0.4.17) that you can download from CRAN. 
+
+The package [rjd3nowcasting](https://github.com/rjdverse/rjd3nowcasting) depends on the package [rjd3toolkit](https://github.com/rjdverse/rjd3toolkit) that you must install from GitHub beforehand.
+
+
+```{r package installation, echo = TRUE, eval = FALSE}
+
+# To get the current stable version (from the latest release):
+### install.packages("remotes")
+remotes::install_github("rjdverse/rjd3toolkit@*release")
+remotes::install_github("rjdverse/rjd3nowcasting@*release", build_vignettes = TRUE)
+
+# or to get the current development version from GitHub:
+remotes::install_github("rjdverse/rjd3nowcasting")
+
+```
+
+Note that depending on the R packages that are already installed on your computer, you might also be asked to install or re-install some other packages from CRAN. 
+
+
+# Usage
+
+```{r package loading, echo = TRUE, eval = FALSE}
+library(rjd3nowcasting)
+```
+
+Once the package is loaded, there are four steps to follow:
+
+1. Import data 
+2. Create or update the model 
+3. Estimate the model 
+4. Get results 
+
+Detailed information concerning each step follows below the example.
+
+```{r quick start example, echo = TRUE, eval = FALSE}
+# Quick start example
+
+## 1. Data
+
+set.seed(100)
+data0 <- stats::ts(
+    data = matrix(rnorm(500), 100, 5), 
+    frequency = 12, 
+    start = c(2010, 1)
+)
+data0[100, 1] <- data0[99:100, 2] <- data0[(1:100)[-seq(3, 100, 3)], 5] <- NA
+
+data1 <- stats::ts(
+    data = rbind(data0, c(NA, NA, 1, 1, NA)), 
+    frequency = 12, 
+    start = c(2010, 1)
+)
+data1[100,1] <- data1[99,2] <- 1
+
+
+## 2. Create or update the model
+
+### Create model from scratch
+dfm0 <- create_model(nfactors=2,
+                     nlags=2,
+                     factors_type = c("M", "M", "YoY", "M", "Q"),
+                     factors_loading = matrix(data = TRUE, 5, 2),
+                     var_init = "Unconditional")
+
+### Update model
+# ! Recall: due to potential presence of local minimum  and lack of  
+# identification issue, it is always better to start from a previously 
+# estimated model when available.  
+est0 <- estimate_em(dfm0, data0) # cfr. next step
+
+dfm1 <- est0$dfm # R object (list) to potentially save from one time to another  
+# or, equivalently,
+dfm1 <- create_model(nfactors=2,
+                     nlags=2,
+                     factors_type = c("M", "M", "YoY", "M", "Q"),
+                     factors_loading = matrix(data = TRUE, 5, 2),
+                     var_init = "Unconditional",
+                     var_coefficients = est0$dfm$var_coefficients,
+                     var_errors_variance = est0$dfm$var_errors_variance,
+                     measurement_coefficients = est0$dfm$measurement_coefficients,
+                     measurement_errors_variance = est0$dfm$measurement_errors_variance)
+
+
+## 3. Estimate the model
+
+est1 <- estimate_ml(dfm1, data1)
+# or est1<-estimate_em(dfm1, data1)
+# or est1<-estimate_pca(dfm1, data1)
+
+
+## 4. Get results
+
+rslt1 <- get_results(est1)
+print(rslt1)
+fcst1 <- get_forecasts(est1, n_fcst = 2)
+print(fcst1)
+plot(fcst1)
+
+news1 <- get_news(est0, data1, target_series = "Series 1", n_fcst = 2)
+print(news1)
+plot(news1)
+```
+## 1. Import data
+
+The data can be imported from anywhere. Then, it is required to create a time-series object by using the well-known `stats::ts()` function like in the example.  
+
+In case of dynamic work, the columns of the dataset should remain the same from one time to another and in the same order. Only additional rows can be added reflecting the new data coming in.   
+
+
+## 2. Create/Update model
+
+### 2.1. Create a new model
+
+The function `create_model()` enables you to build a new model.
+
+The state-space representation of Dynamic Factor Model can be written as follows
+$$
+\begin{aligned}
+  y_t &= Z f_t + \epsilon_t, \quad \epsilon_t \sim N(0, R_t) \\
+  f_t &= A_1 f_{t-1} + ... + A_p f_{t-p} + \eta_t, \quad \eta_t \sim N(0, Q_t) 
+\end{aligned}
+$$
+where the measurement equation links the observations to the underlying factors. Those factors, as shown in the second equation, follow a VAR process of order p. The number of factors to consider and the order p of the VAR process are to be defined in the first two arguments of the function `create_model()`.
+
+The third argument `factors_type` defines the link between the series and the factors (Z matrix). This link can be more or less sophisticated depending on the variables. Three options are possible for the moment:
+
+* A variable expressed in terms of monthly growth rates can be linked to a factor representing the underlying monthly growth rate of the economy by defining the factor type as "M" for this variable (default).
+
+* A monthly or quarterly variable that is correlated with the the underlying quarterly growth rate of the economy can be linked to a weighted average of the factors representing the underlying monthly growth rate of the economy. Such a weighted average is meant to represent quarterly growth rates, and it can be implemented by defining the factor type as "Q" for this variable. 
+
+* A variable can also be linked to the cumulative sum of the last 12 monthly factors. If the model is designed in such a way that the monthly factors represent monthly growth rates, the resulting cumulative sum boils down to the year-on-year growth rate. Thus, variables expressed in terms of year-on-year growth rates or surveys that are correlated with the year-on-year growth rates of the reference series should be linked to the factors in this way. The factor type should be defined as "YoY" in this case.
+
+The fourth and last compulsory argument refers to the factors loading that can incorporate zero restrictions. Users must mention there which factors load on which variables.
+
+The argument `var_init` tells whether the first unobserved factors values should be defined considering the unconditional distribution (recommended) or should be set equal to zero.  
+
+The last four arguments `var_coefficients`, `var_errors_variance`, `measurement_coefficients` and `measurement_errors_variance` can be used to create a model based on a previous estimate of the model (see section Update an existing model). The default value of those four arguments is NULL meaning that the model will be created from scratch.
+
+### 2.2. Update an existing model
+
+In case of dynamic work, a similar model was previously estimated based on an older version of the data. In that case, it is recommended not to create a new model from scratch but to start from the previously estimated model. For that, it must be made recoverable from the previous time. One option is to save the required information from one time to another using the base function `saveRDS()` (see section 3 to know what exactly should be saved). Reasons for starting from a previously estimated model when available are faster convergence during the estimation step and the possibility to avoid running into another local minimum, resulting in parameters estimates that could potentially be very different from the previous time (especially since the model is not fully identifiable).   
+
+To generate a new model from a previously estimated one, there are two possibilities:
+
+* Set the new R object directly from the previous one, or
+
+* Use the function `create_model()` while filling the arguments `var_coefficients`, `var_errors_variance`, `measurement_coefficients` and `measurement_errors_variance` with their previously estimated values.
+
+
+### 2.3. Composition of the created object 
+
+The function `create_model()` returns a R object called 'JD3_DfmModel'. This is just a list of six elements that fully characterize the model. The list includes the estimated coefficient of the VAR equation and the variance-covariance matrix of the error terms, the estimated coefficient of the measurement equation and the idiosyncratic variance of the error terms, the type of initialisation and the link to consider between the series and the factor (i.e. the argument `factors_type`). This is a R list of matrices and vectors that can easily be saved from one time to another using for example the function `saveRDS()`.       
+
+
+## 3. Estimation
+
+### 3.1. Different algorithms/functions
+
+Parameters can be estimated using different algorithms. One of the three available functions should be picked for the purpose of estimation:
+
+* The function `estimate_pca()` estimates the model parameters using only Principal Component Analysis (PCA). Although this is fast, this approach is not recommended, especially if some series are quarterly series or series associated to year-on-year growth rates (see section 2.1).   
+* The function `estimate_em()` estimates the model parameters using the EM algorithm (with initial values given by PCA by default). The function includes a few optional arguments which can be used to tune the estimation process.  
+* The function `estimate_ml()` estimates the model parameters by Maximum Likelihood (by default, with initial values given by the EM algorithm whose initial values are given by PCA). The function includes several optional arguments which can be used to tune the estimation process. The function `estimate_ml()` is recommended, although it can be argued that the function `estimate_em()`, which is somewhat faster, also constitutes a good solution.  
+
+The three functions have two compulsory arguments which are necessary to estimate parameters: the model, i.e. an object of class 'JD3_DfmModel' typically generated by the `create_model()` function, and the dataset which must be a `mts` object. All three functions return the same R object, an object of class 'JD3_DfmEstimates' that can be used as input for the results functions (see section 4). Note that the returned object is just a R list containing various elements.
+
+In addition to the selected algorithm, estimation speed depends on the size of the model. Models with one or two factors will be fastly estimated (in a few seconds), also when the number of variables is large. However, the estimation of more complex models may take minutes to converge.
+
+### 3.2. Prior standardization of the data
+
+Dynamic factor models require a prior standardization of the data. This is an essential step which can lead to confusion in certain situations. The usual mechanism is quite simple and is divided into three stages:
+
+1. Standardization of each variables (i.e., subtract the mean and divide by the standard deviation)
+2. Model estimation based on standardized data
+3. Convert results (including forecasts) for raw data 
+
+This means that both the likelihood of the model and the estimates of the parameters, will be given by the transformed data. However, final results like the forecasts and the forecasts errors variance of the transformed series will be converted for the raw data.
+
+By default, the data are standardized. If, for some reasons, your dataset already contains standardized data, the standardization step can be skipped by defining `standardized = TRUE` in the estimation function. 
+
+We need to pay particular attention to the standardization step when working dynamically. For instance, if you do not wish to re-estimate the model (see section 3.3), you must also provide the initial mean and standard deviation of each variables calculated at the time of the last estimation of the model. The argument `input_standardization` in each estimation function is for that purpose. Note that for news analysis (see section 4.3), the mean and standard deviation considered for the standardization step must be the same for the old and the new datasets. In practice, they are calculated based on the old dataset.   
+
+### 3.3. Fixed parameters
+
+The three estimation functions include a boolean argument `re_estimate` that indicate whether the model should be re-estimated (default) or not.
+
+Note that for news analysis (see section 4.3), the model is kept unchanged between the previous and the current period to track the impact of news. Hence, to retrieve the same forecasts as those return by the `get_news()` function, we should consider `re_estimate = FALSE` and the previous standardization input should be added in the argument `input_standardization` (see section 3.2).
+
+### 3.4. Save R object from one time to another
+
+In case of dynamic work, some R object should be passed from one time to another (see section 2.2). To do that, the user is invited to use the functions `saveRDS()` and `readRDS()` from base R.  
+
+What to save depends whether the intention of the user is to perform news analysis. 
+
+If the intention is not to perform news analysis and just to re-estimate the model each time and update the forecasts, only the estimated model should be saved from one time to another. This is an object of class 'JD3_DfmModel', generated as part of the output of the function `estimate_pca()`, `estimate_em()` or `estimate_ml()`, where the default/previous estimates of the parameters are replaced by the new ones. The updated model is the element referred to as 'dfm' in the list returned by the estimation functions.
+
+If the intention is to perform news analysis, the entire object/list returned by the function `estimate_pca()`, `estimate_em()` or `estimate_ml()`, i.e. an R object of class 'JD3_DfmEstimates', should be saved. Optionally, a matrix with the standardization input used at the time of the initial estimate (i.e. the mean and standard deviation used to standardize data) can be saved as well. At the time of the initial estimate, the formatted matrix containing this information can be found in the preprocessing section of the output of the function `get_results()` (see section 4.1). This could be used for instance to retrieve the concordance of the forecasts between the functions `get_forecasts()` and `get_news()`.   
+
+
+## 4. Results
+
+Results are split in three parts.
+
+### 4.1. Estimates 
+
+The function `get_results()` can be used to obtain results related to 
+
+* pre-processing: including the standardization input (see section 3.2, 3.3 and 3.4)
+* parameters estimates 
+* factors
+* residuals
+* likelihood
+
+The function `get_results()` has a single argument which is an object of class 'JD3_DfmEstimates' typically generated by the function `estimate_pca()`, `estimate_em()` or `estimate_ml()`. It returns an object of class 'JD3_DfmResults' which is a list of the aforementioned output. A generic `print()` function can be applied on its output and returns (by default) nicely formatted results related to the parameters estimates. 
+
+### 4.2. Forecasts
+
+The function `get_forecasts()` can be used to obtain forecasts of the variables, as well as the forecast errors standard deviation. You have access to both the forecasts of the transformed series (see section 3.2) and the raw series. As part of the output list, there is also extra output referred to as 'forecasts_only'. Those are just an extract of the forecasts of the raw series which contains only the forecasts, i.e. where the rest of the series does not appear together with the forecasts. 
+
+The function `get_forecasts()` has two arguments. One is an object of class 'JD3_DfmEstimates' typically generated by the function `estimate_pca()`, `estimate_em()` or `estimate_ml()`. The other is the number of forecasting periods to consider, starting from the most up-to-date variable.
+
+Two generic functions can be applied to the object returned by the function `get_forecasts()`. A `print()` function will return (by default) the forecasts only. A `plot` function can be used to visualize the series and the forecasts as well a 80% prediction interval around the forecasts.
+
+### 4.3. News analysis
+
+There are two kind of differences between two consecutive updates of a dataset:
+
+1. Newly released figures
+2. Revision of past data 
+
+The purpose of news analysis is to monitor the impact of (1) on the forecasts. Those impacts can be scrutinized in details by using the `get_news()` function. This function displays the impact of the difference between the newly released figures and their forecast based on the revised figures (i.e. the old data + (2)). 
+
+The function `get_news()` has four arguments:
+
+- The estimated model which is an object of class 'JD3_DfmEstimates' generated by the function `estimate_pca()`, `estimate_em()` or `estimate_ml()`. As the purpose of news analysis is to monitor the impact of newly released figures on forecasts, the model is kept unchanged between the previous and the new release. Hence, the previously estimated model should be the one specified here. Note that the pre-standardization of the data (see section 3.2) is also calculated based on the previous release.  
+- The newly released data which should be a `mts` object
+- The variable of interest
+- The number of forecasts to consider
+
+The list of output returned by the function `get_news()` contains the weights of the news, their impact and the forecasts for both the transformed (see section 3.2) and the raw series. The weights given to each news represent their relevance for the variable of interest. The impacts are the weights of the news times their size. They give the impact of each piece of news on the forecast revisions of the variable of interest. Therefore they allow users to understand how the revisions can be decomposed in terms of the news components for the various series. The generic `plot()` function can be used directly on object of class 'JD3_DfmNews' (i.e. object generated by the function `get_news()`) to quickly visualize all impacts with a nicely formatted barchart. This is similar to what was included in the [GUI add-in](https://github.com/nbbrd/jdemetra-nowcasting) of JDemetra+ V2.x. 
+
+Finally, the forecasts returned by the function `get_news()` include: 
+
+- The old forecasts which are the forecasts based on the previous data 
+- The revised forecasts which are the forecasts based on the previous data but where past data were revised based on the new data. Hence, the global impact of revisions in past data are also provided by considering the difference between the revised forecasts and the old forecasts. 
+- The new forecasts which are the forecasts based on the new data. The difference between the new and the revised forecasts corresponds to the sum of the impacts of each news.  
+
+In addition to the `plot()` function, there are two more generic functions that can be applied to an object of class 'JD3_DfmNews'. The function `summary()` will give you a summary of the weights and impacts of each news on the variable of interest for each forecasting period.  The `print()` function returns the same table as the `summary()` function together with the information related to the forecasts.
+
+
+# References
+
+- Banbura, Marta and Modugno, Michele (2010) “Maximum Likelihood Estimation Of Factors Models On Data Sets With Arbitrary Pattern Of Missing Data” Working Paper Series NO 1189 ECB.
+
+- De Antonio Liedo, David (2014) "Nowcasting Belgium" Working paper Research NO 256.
