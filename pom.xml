@@ -11,7 +11,7 @@
     <description>Usage: mvn -Pcopy-jars</description>
 
     <properties>
-        <jdplus-nowcasting.version>1.0.2</jdplus-nowcasting.version>
+        <jdplus-nowcasting.version>2.0.0</jdplus-nowcasting.version>
     </properties>
 
     <dependencies>
