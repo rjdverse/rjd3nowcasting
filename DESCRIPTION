@@ -17,7 +17,7 @@ Imports:
   rJava (>= 1.0-6),
   rjd3toolkit (>= 3.2.2)
 Remotes:
-  github::rjdverse/rjd3nowcasting
+  github::rjdverse/rjd3toolkit
 SystemRequirements: Java (>= 17)
 License: EUPL
 URL: https://github.com/rjdverse/rjd3nowcasting,
