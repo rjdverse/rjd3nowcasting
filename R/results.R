@@ -121,7 +121,7 @@ DFMFORECASTS<-'JD3_DfmForecasts'
   nlags<-ncol(var_coef)/nfactors
 
   var_coef_cnames<-var_coef_rnames<-character()
-  k=1
+  k <- 1
   for(i in 1:nlags){
     for(j in 1:nfactors){
       if(i == 1) var_coef_rnames[j]<-paste0("F",j)

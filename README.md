@@ -1,9 +1,18 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rjd3nowcasting
+# `rjd3nowcasting` <a href="https://rjdverse.github.io/rjd3nowcasting/"><img src="man/figures/logo.png" align="right" height="150" style="float:right; height:150px;"/></a>
 
 <!-- badges: start -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/rjd3nowcasting)](https://CRAN.R-project.org/package=rjd3nowcasting)
+
+[![R-CMD-check](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/R-CMD-check.yaml)
+[![lint](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/lint.yaml/badge.svg)](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/lint.yaml)
+
+[![GH Pages
+built](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 ## Overview
@@ -110,11 +119,17 @@ print(rslt_ml)
 #>    F1 F2
 #> F1  1 -1
 #> F2 -1  1
+```
+
+``` r
 summary(rslt_ml)
 #> Nowcasted values (only):
 #>           Series 1     Series 2 Series 3 Series 4  Series 5
 #> Mar 2018        NA 0.3198988965       NA       NA        NA
 #> Apr 2018 0.1827459 0.0001724063       NA       NA -2.427725
+```
+
+``` r
 plot(rslt_ml)
 ```
 
