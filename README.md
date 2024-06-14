@@ -38,14 +38,14 @@ To get the current stable version (from the latest release):
 ``` r
 # install.packages("remotes")
 remotes::install_github("rjdverse/rjd3toolkit@*release")
-remotes::install_github("rjdverse/rjd3nowcasting@*release")
+remotes::install_github("rjdverse/rjd3nowcasting@*release", build_vignettes = TRUE))
 ```
 
 To get the current development version from GitHub:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("rjdverse/rjd3nowcasting")
+remotes::install_github("rjdverse/rjd3nowcasting", build_vignettes = TRUE))
 ```
 
 ## Usage
