@@ -2,11 +2,14 @@ Package: rjd3nowcasting
 Type: Package
 Title: Nowcasting with 'JDemetra+ 3.0'
 Version: 2.0.1
-Authors@R: 
+Authors@R: c(
     person(given = "Corentin",
            family = "Lemasson",
            role = c("aut", "cre"),
-           email = "corentin.lemasson@nbb.be")
+           email = "corentin.lemasson@nbb.be"),
+  person("Tanguy", "Barthelemy", role = c("ctb", "art"),
+                 email ="tanguy.barthelemy@insee.fr")
+                 )
 Description: Interface around 'JDemetra+ 3.x' 
              (<https://github.com/jdemetra/jdplus-nowcasting>), TSACE project.
 	     It defines and estimates Dynamic Factor Models with the
