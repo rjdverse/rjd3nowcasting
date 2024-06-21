@@ -22,7 +22,7 @@ near future and the very recent past.
 
 rjd3nowcasting provides helps to operationalize the process of
 nowcasting. It can be used to specify and estimate
-dynamic factor models. It also includes the
+Dynamic Factor Models. Starting from v2.x, it also includes the
 concept of “news” similar to the [Nowcasting
 plugin](https://github.com/nbbrd/jdemetra-nowcasting/tree/master) for
 the Graphical User Interface of JDemetra+ v2.
@@ -54,86 +54,82 @@ remotes::install_github("rjdverse/rjd3nowcasting", build_vignettes = TRUE)
 library("rjd3nowcasting")
 ```
 
+Once the package is loaded, there are four steps to follow:
+
+1. Import data 
+2. Create or update the model 
+3. Estimate the model 
+4. Get results
+
+Detailed information concerning each step can be found in the vignette.
+   
 ### Input
 
 ``` r
 set.seed(100)
-data <- ts(
+data0 <- stats::ts(
     data = matrix(rnorm(500), 100, 5), 
     frequency = 12, 
     start = c(2010, 1)
 )
-data[100, 1] <- data[99:100, 2] <- data[(1:100)[-seq(3, 100, 3)], 5] <- NA
-```
+data0[100, 1] <- data0[99:100, 2] <- data0[(1:100)[-seq(3, 100, 3)], 5] <- NA
 
-### Model
-
-``` r
-dfm_model <- model(
-    nfactors = 2,
-    nlags = 2,
-    factors_type = c("M", "M", "YoY", "M", "Q"),
-    factors_loading = matrix(data = TRUE, 5, 2),
-    var_init = "Unconditional"
+data1 <- stats::ts(
+    data = rbind(data0, c(NA, NA, 1, 1, NA)), 
+    frequency = 12, 
+    start = c(2010, 1)
 )
+data1[100,1] <- data1[99,2] <- 1
 ```
 
-### Estimation
+### 2. Create or update the model
 
 ``` r
-rslt_ml <- estimate_ml(dfm_model, data)
-# or rslt_em<-estimate_em(dfm_model, data)
-# or rslt_pca<-estimate_pca(dfm_model, data)
+### Create model from scratch
+dfm0 <- create_model(nfactors=2,
+                     nlags=2,
+                     factors_type = c("M", "M", "YoY", "M", "Q"),
+                     factors_loading = matrix(data = TRUE, 5, 2),
+                     var_init = "Unconditional")
+
+### Update model
+est0 <- estimate_em(dfm0, data0) # cfr. next step
+
+dfm1 <- est0$dfm # R object (list) to potentially save from one time to another  
+# or, equivalently,
+dfm1 <- create_model(nfactors=2,
+                     nlags=2,
+                     factors_type = c("M", "M", "YoY", "M", "Q"),
+                     factors_loading = matrix(data = TRUE, 5, 2),
+                     var_init = "Unconditional",
+                     var_coefficients = est0$dfm$var_coefficients,
+                     var_errors_variance = est0$dfm$var_errors_variance,
+                     measurement_coefficients = est0$dfm$measurement_coefficients,
+                     measurement_errors_variance = est0$dfm$measurement_errors_variance)
 ```
 
-### Results
+### 3. Estimate the model
 
 ``` r
-fcst <- get_forecasts(rslt_ml, nf = 2, forecasts_only = TRUE)
-params <- get_parameters(rslt_ml)
-factors <- get_factors(rslt_ml)
+est1 <- estimate_ml(dfm1, data1)
+# or est1<-estimate_em(dfm1, data1)
+# or est1<-estimate_pca(dfm1, data1)
+```
+
+### 4. Get results
+
+``` r
+rslt1 <- get_results(est1)
+print(rslt1)
+fcst1 <- get_forecasts(est1, n_fcst = 2)
+print(fcst1)
+plot(fcst1)
+
+news1 <- get_news(est0, data1, target_series = "Series 1", n_fcst = 2)
+print(news1)
+plot(news1)
 # ...
-
-print(rslt_ml)
-#> Measurement:
-#>          Sample mean Sample Stdev Coeff. of normalized factor F1
-#> Series 1     0.01480      1.01376                        0.11234
-#> Series 2     0.01656      0.79045                       -0.07066
-#> Series 3     0.01279      1.03407                        0.00171
-#> Series 4    -0.08325      1.07544                       -0.00624
-#> Series 5    -0.21205      1.06909                       -0.00302
-#>          Coeff. of normalized factor F2 Idiosyncratic variance
-#> Series 1                        0.55341                0.41091
-#> Series 2                       -0.06925                0.93488
-#> Series 3                        0.04849                0.98831
-#> Series 4                        0.03340                0.99792
-#> Series 5                       -0.33934                0.00000
-#> 
-#> State:
-#> VAR coefficients:
-#>      F1[-1]   F2[-1]   F1[-2]   F2[-2]
-#> F1  1.44836 -0.97181 -0.76117  1.23216
-#> F2 -0.02442 -0.59011 -0.02834 -0.09459
-#> 
-#> Innovative variance:
-#>    F1 F2
-#> F1  1 -1
-#> F2 -1  1
 ```
-
-``` r
-summary(rslt_ml)
-#> Nowcasted values (only):
-#>           Series 1     Series 2 Series 3 Series 4  Series 5
-#> Mar 2018        NA 0.3198988965       NA       NA        NA
-#> Apr 2018 0.1827459 0.0001724063       NA       NA -2.427725
-```
-
-``` r
-plot(rslt_ml)
-```
-
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" />
 
 ## Package Maintenance and contributing
 
