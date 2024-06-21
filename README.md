@@ -22,9 +22,7 @@ near future and the very recent past.
 
 rjd3nowcasting provides helps to operationalize the process of
 nowcasting. It can be used to specify and estimate
-Dynamic Factor Models. Recent version of the package also includes news analysis similar to what was included in the [Nowcasting
-plugin](https://github.com/nbbrd/jdemetra-nowcasting/tree/master) for
-the Graphical User Interface of JDemetra+ v2.
+Dynamic Factor Models. Recent version of the package also includes news analysis. The way the package was conceived is inspired by the [GUI add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for JDemetra+ V2.
 
 ## Installation
 
