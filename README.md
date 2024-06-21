@@ -21,7 +21,7 @@ Nowcasting is often defined as the prediction of the present, the very
 near future and the very recent past.
 
 rjd3nowcasting provides helps to operationalize the process of
-nowcasting. This first version can be used to specify and estimate
+nowcasting. It can be used to specify and estimate
 dynamic factor models. It also includes the
 concept of “news” similar to the [Nowcasting
 plugin](https://github.com/nbbrd/jdemetra-nowcasting/tree/master) for
