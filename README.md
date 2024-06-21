@@ -63,7 +63,7 @@ Once the package is loaded, there are four steps to follow:
 
 Detailed information concerning each step can be found in the vignette.
    
-### Input
+### 1. Input
 
 ``` r
 set.seed(100)
