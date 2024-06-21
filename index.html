@@ -85,7 +85,7 @@
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>Nowcasting is often defined as the prediction of the present, the very near future and the very recent past.</p>
-<p>rjd3nowcasting provides helps to operationalize the process of nowcasting. It can be used to specify and estimate dynamic factor models. It also includes the concept of “news” similar to the <a href="https://github.com/nbbrd/jdemetra-nowcasting/tree/master" class="external-link">Nowcasting plugin</a> for the Graphical User Interface of JDemetra+ v2.</p>
+<p>rjd3nowcasting provides helps to operationalize the process of nowcasting. It can be used to specify and estimate Dynamic Factor Models. Recent version of the package also includes news analysis. The way the package was conceived is inspired by the <a href="https://github.com/nbbrd/jdemetra-nowcasting" class="external-link">GUI add-in</a> developed for JDemetra+ V2.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -106,81 +106,81 @@
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/rjdverse/rjd3nowcasting" class="external-link">"rjd3nowcasting"</a></span><span class="op">)</span></span></code></pre></div>
+<p>Once the package is loaded, there are four steps to follow:</p>
+<ol style="list-style-type: decimal">
+<li>Import data</li>
+<li>Create or update the model</li>
+<li>Estimate the model</li>
+<li>Get results</li>
+</ol>
+<p>Detailed information concerning each step can be found in the vignette.</p>
 <div class="section level3">
-<h3 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
+<h3 id="id_1-input">1. Input<a class="anchor" aria-label="anchor" href="#id_1-input"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span></span>
+<span><span class="va">data0</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>, <span class="fl">100</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>    frequency <span class="op">=</span> <span class="fl">12</span>, </span>
 <span>    start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">data</span><span class="op">[</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span><span class="fl">99</span><span class="op">:</span><span class="fl">100</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">100</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span>, <span class="fl">5</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></code></pre></div>
+<span><span class="va">data0</span><span class="op">[</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">data0</span><span class="op">[</span><span class="fl">99</span><span class="op">:</span><span class="fl">100</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">data0</span><span class="op">[</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">100</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span>, <span class="fl">5</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span></span>
+<span><span class="va">data1</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">data0</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>    frequency <span class="op">=</span> <span class="fl">12</span>, </span>
+<span>    start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">data1</span><span class="op">[</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">data1</span><span class="op">[</span><span class="fl">99</span>,<span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="model">Model<a class="anchor" aria-label="anchor" href="#model"></a>
+<h3 id="id_2-create-or-update-the-model">2. Create or update the model<a class="anchor" aria-label="anchor" href="#id_2-create-or-update-the-model"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dfm_model</span> <span class="op">&lt;-</span> <span class="fu">model</span><span class="op">(</span></span>
-<span>    nfactors <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>    nlags <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>    factors_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M"</span>, <span class="st">"M"</span>, <span class="st">"YoY"</span>, <span class="st">"M"</span>, <span class="st">"Q"</span><span class="op">)</span>,</span>
-<span>    factors_loading <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">TRUE</span>, <span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span>,</span>
-<span>    var_init <span class="op">=</span> <span class="st">"Unconditional"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">### Create model from scratch</span></span>
+<span><span class="va">dfm0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/create_model.html">create_model</a></span><span class="op">(</span>nfactors<span class="op">=</span><span class="fl">2</span>,</span>
+<span>                     nlags<span class="op">=</span><span class="fl">2</span>,</span>
+<span>                     factors_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M"</span>, <span class="st">"M"</span>, <span class="st">"YoY"</span>, <span class="st">"M"</span>, <span class="st">"Q"</span><span class="op">)</span>,</span>
+<span>                     factors_loading <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">TRUE</span>, <span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>                     var_init <span class="op">=</span> <span class="st">"Unconditional"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">### Update model</span></span>
+<span><span class="va">est0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_em.html">estimate_em</a></span><span class="op">(</span><span class="va">dfm0</span>, <span class="va">data0</span><span class="op">)</span> <span class="co"># cfr. next step</span></span>
+<span></span>
+<span><span class="va">dfm1</span> <span class="op">&lt;-</span> <span class="va">est0</span><span class="op">$</span><span class="va">dfm</span> <span class="co"># R object (list) to potentially save from one time to another  </span></span>
+<span><span class="co"># or, equivalently,</span></span>
+<span><span class="va">dfm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/create_model.html">create_model</a></span><span class="op">(</span>nfactors<span class="op">=</span><span class="fl">2</span>,</span>
+<span>                     nlags<span class="op">=</span><span class="fl">2</span>,</span>
+<span>                     factors_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M"</span>, <span class="st">"M"</span>, <span class="st">"YoY"</span>, <span class="st">"M"</span>, <span class="st">"Q"</span><span class="op">)</span>,</span>
+<span>                     factors_loading <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">TRUE</span>, <span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>                     var_init <span class="op">=</span> <span class="st">"Unconditional"</span>,</span>
+<span>                     var_coefficients <span class="op">=</span> <span class="va">est0</span><span class="op">$</span><span class="va">dfm</span><span class="op">$</span><span class="va">var_coefficients</span>,</span>
+<span>                     var_errors_variance <span class="op">=</span> <span class="va">est0</span><span class="op">$</span><span class="va">dfm</span><span class="op">$</span><span class="va">var_errors_variance</span>,</span>
+<span>                     measurement_coefficients <span class="op">=</span> <span class="va">est0</span><span class="op">$</span><span class="va">dfm</span><span class="op">$</span><span class="va">measurement_coefficients</span>,</span>
+<span>                     measurement_errors_variance <span class="op">=</span> <span class="va">est0</span><span class="op">$</span><span class="va">dfm</span><span class="op">$</span><span class="va">measurement_errors_variance</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="estimation">Estimation<a class="anchor" aria-label="anchor" href="#estimation"></a>
+<h3 id="id_3-estimate-the-model">3. Estimate the model<a class="anchor" aria-label="anchor" href="#id_3-estimate-the-model"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rslt_ml</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_ml.html">estimate_ml</a></span><span class="op">(</span><span class="va">dfm_model</span>, <span class="va">data</span><span class="op">)</span></span>
-<span><span class="co"># or rslt_em&lt;-estimate_em(dfm_model, data)</span></span>
-<span><span class="co"># or rslt_pca&lt;-estimate_pca(dfm_model, data)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">est1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_ml.html">estimate_ml</a></span><span class="op">(</span><span class="va">dfm1</span>, <span class="va">data1</span><span class="op">)</span></span>
+<span><span class="co"># or est1&lt;-estimate_em(dfm1, data1)</span></span>
+<span><span class="co"># or est1&lt;-estimate_pca(dfm1, data1)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
+<h3 id="id_4-get-results">4. Get results<a class="anchor" aria-label="anchor" href="#id_4-get-results"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fcst</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_forecasts.html">get_forecasts</a></span><span class="op">(</span><span class="va">rslt_ml</span>, nf <span class="op">=</span> <span class="fl">2</span>, forecasts_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu">get_parameters</span><span class="op">(</span><span class="va">rslt_ml</span><span class="op">)</span></span>
-<span><span class="va">factors</span> <span class="op">&lt;-</span> <span class="fu">get_factors</span><span class="op">(</span><span class="va">rslt_ml</span><span class="op">)</span></span>
-<span><span class="co"># ...</span></span>
+<code class="sourceCode R"><span><span class="va">rslt1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_results.html">get_results</a></span><span class="op">(</span><span class="va">est1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">rslt1</span><span class="op">)</span></span>
+<span><span class="va">fcst1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_forecasts.html">get_forecasts</a></span><span class="op">(</span><span class="va">est1</span>, n_fcst <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fcst1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fcst1</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">rslt_ml</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Measurement:</span></span>
-<span><span class="co">#&gt;          Sample mean Sample Stdev Coeff. of normalized factor F1</span></span>
-<span><span class="co">#&gt; Series 1     0.01480      1.01376                        0.11234</span></span>
-<span><span class="co">#&gt; Series 2     0.01656      0.79045                       -0.07066</span></span>
-<span><span class="co">#&gt; Series 3     0.01279      1.03407                        0.00171</span></span>
-<span><span class="co">#&gt; Series 4    -0.08325      1.07544                       -0.00624</span></span>
-<span><span class="co">#&gt; Series 5    -0.21205      1.06909                       -0.00302</span></span>
-<span><span class="co">#&gt;          Coeff. of normalized factor F2 Idiosyncratic variance</span></span>
-<span><span class="co">#&gt; Series 1                        0.55341                0.41091</span></span>
-<span><span class="co">#&gt; Series 2                       -0.06925                0.93488</span></span>
-<span><span class="co">#&gt; Series 3                        0.04849                0.98831</span></span>
-<span><span class="co">#&gt; Series 4                        0.03340                0.99792</span></span>
-<span><span class="co">#&gt; Series 5                       -0.33934                0.00000</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; State:</span></span>
-<span><span class="co">#&gt; VAR coefficients:</span></span>
-<span><span class="co">#&gt;      F1[-1]   F2[-1]   F1[-2]   F2[-2]</span></span>
-<span><span class="co">#&gt; F1  1.44836 -0.97181 -0.76117  1.23216</span></span>
-<span><span class="co">#&gt; F2 -0.02442 -0.59011 -0.02834 -0.09459</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Innovative variance:</span></span>
-<span><span class="co">#&gt;    F1 F2</span></span>
-<span><span class="co">#&gt; F1  1 -1</span></span>
-<span><span class="co">#&gt; F2 -1  1</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rslt_ml</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Nowcasted values (only):</span></span>
-<span><span class="co">#&gt;           Series 1     Series 2 Series 3 Series 4  Series 5</span></span>
-<span><span class="co">#&gt; Mar 2018        NA 0.3198988965       NA       NA        NA</span></span>
-<span><span class="co">#&gt; Apr 2018 0.1827459 0.0001724063       NA       NA -2.427725</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rslt_ml</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;"></p>
+<span><span class="va">news1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_news.html">get_news</a></span><span class="op">(</span><span class="va">est0</span>, <span class="va">data1</span>, target_series <span class="op">=</span> <span class="st">"Series 1"</span>, n_fcst <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">news1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">news1</span><span class="op">)</span></span>
+<span><span class="co"># ...</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
