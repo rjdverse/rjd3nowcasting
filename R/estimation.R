@@ -161,9 +161,9 @@ create_model<-function(nfactors, nlags, factors_type, factors_loading, var_init 
   jvar_coefficients <- rjd3toolkit::.r2jd_matrix(var_coefficients)
   jvar_errors_variance <- rjd3toolkit::.r2jd_matrix(var_errors_variance)
   jmeasurement_coefficients <- rjd3toolkit::.r2jd_matrix(measurement_coefficients)
-  if(is.null(measurement_errors_variance)){
+  if (is.null(measurement_errors_variance)){
     jmeasurement_errors_variance <- .jnull("[D")
-  }else{
+  } else {
     jmeasurement_errors_variance <- .jarray(as.numeric(measurement_errors_variance))
   }
 
@@ -226,14 +226,14 @@ create_model<-function(nfactors, nlags, factors_type, factors_loading, var_init 
 estimate_pca<-function(dfm, data, standardized = FALSE,
                        input_standardization = NULL, re_estimate = TRUE){
 
-  if(re_estimate){
+  if (re_estimate){
     jdfm<-.r2jd_dfm(dfm)
     freq<-stats::frequency(data)
     start<-start(data)
     jdata<-rjd3toolkit::.r2jd_matrix(data)
-    if(is.null(input_standardization)){
+    if (is.null(input_standardization)){
       standardization_mean <- standardization_stdev <- .jnull(class = "[D")
-    } else{
+    } else {
       standardization_mean <- input_standardization[,1]
       standardization_stdev <- input_standardization[,2]
     }
@@ -261,8 +261,8 @@ estimate_pca<-function(dfm, data, standardized = FALSE,
     hessian<-rjd3toolkit::result(jest,"hessian")
     has_converged<-rjd3toolkit::result(jest,"has_converged")
 
-  }else{
-    if(!standardized && is.null(input_standardization)){
+  } else {
+    if (!standardized && is.null(input_standardization)){
       stop("Since you chose not to re-estimate your model, you must also
            fill the argument 'input_standardization' with the original mean
            and standard deviation that was previously used to standardize your
@@ -340,14 +340,14 @@ estimate_em<-function(dfm, data, standardized = FALSE, input_standardization = N
                       pca_init = TRUE, max_iter = 100, eps = 1e-9,
                       re_estimate = TRUE){
 
-  if(re_estimate){
+  if (re_estimate){
     jdfm<-.r2jd_dfm(dfm)
     freq<-stats::frequency(data)
     start<-start(data)
     jdata<-rjd3toolkit::.r2jd_matrix(data)
-    if(is.null(input_standardization)){
+    if (is.null(input_standardization)){
       standardization_mean <- standardization_stdev <- .jnull(class = "[D")
-    } else{
+    } else {
       standardization_mean <- input_standardization[,1]
       standardization_stdev <- input_standardization[,2]
     }
@@ -378,8 +378,8 @@ estimate_em<-function(dfm, data, standardized = FALSE, input_standardization = N
     hessian<-rjd3toolkit::result(jest,"hessian")
     has_converged<-rjd3toolkit::result(jest,"has_converged")
 
-  }else{
-    if(!standardized && is.null(input_standardization)){
+  } else {
+    if (!standardized && is.null(input_standardization)){
       stop("Since you chose not to re-estimate your model, you must also
            fill the argument 'input_standardization' with the original mean
            and standard deviation that was previously used to standardize your
@@ -479,14 +479,14 @@ estimate_ml<-function(dfm, data, standardized = FALSE, input_standardization = N
                       simpl_model_iter = 15, independent_var_shocks = FALSE,
                       mixedEstimation = TRUE, eps=1e-9, re_estimate = TRUE){
 
-  if(re_estimate){
+  if (re_estimate){
     jdfm<-.r2jd_dfm(dfm)
     freq<-stats::frequency(data)
     start<-start(data)
     jdata<-rjd3toolkit::.r2jd_matrix(data)
-    if(is.null(input_standardization)){
+    if (is.null(input_standardization)){
       standardization_mean <- standardization_stdev <- .jnull(class = "[D")
-    } else{
+    } else {
       standardization_mean <- input_standardization[,1]
       standardization_stdev <- input_standardization[,2]
     }
@@ -524,8 +524,8 @@ estimate_ml<-function(dfm, data, standardized = FALSE, input_standardization = N
     hessian<-rjd3toolkit::result(jest,"hessian")
     has_converged<-rjd3toolkit::result(jest,"has_converged")
 
-  }else{
-    if(!standardized && is.null(input_standardization)){
+  } else {
+    if (!standardized && is.null(input_standardization)){
       stop("Since you chose not to re-estimate your model, you must also
            fill the argument 'input_standardization' with the original mean
            and standard deviation that was previously used to standardize your

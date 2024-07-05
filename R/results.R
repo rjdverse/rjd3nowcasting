@@ -7,9 +7,9 @@ DFMFORECASTS<-'JD3_DfmForecasts'
   freq<-stats::frequency(data)
   start<-start(data)
   jdata<-rjd3toolkit::.r2jd_matrix(data)
-  if(is.null(input_standardization)){
+  if (is.null(input_standardization)){
     standardization_mean <- standardization_stdev <- .jnull(class = "[D")
-  } else{
+  } else {
     standardization_mean <- input_standardization[,1]
     standardization_stdev <- input_standardization[,2]
   }
@@ -54,9 +54,9 @@ DFMFORECASTS<-'JD3_DfmForecasts'
   freq <- stats::frequency(data)
   start <- start(data)
   jdata <- rjd3toolkit::.r2jd_matrix(data)
-  if(is.null(input_standardization)){
+  if (is.null(input_standardization)){
     standardization_mean <- standardization_stdev <- .jnull(class = "[D")
-  } else{
+  } else {
     standardization_mean <- input_standardization[,1]
     standardization_stdev <- input_standardization[,2]
   }
@@ -124,7 +124,7 @@ DFMFORECASTS<-'JD3_DfmForecasts'
   k <- 1
   for(i in 1:nlags){
     for(j in 1:nfactors){
-      if(i == 1) var_coef_rnames[j]<-paste0("F",j)
+      if (i == 1) var_coef_rnames[j]<-paste0("F",j)
       var_coef_cnames[k]<-paste0("F",j,"[",-i,"]")
       k<-k+1
     }
@@ -279,7 +279,7 @@ print.JD3_DfmResults <- function(x, ...){
 #'
 get_forecasts <- function(dfm_estimates, n_fcst = 3){
 
-  if(n_fcst < 1) n_fcst<-1
+  if (n_fcst < 1) n_fcst<-1
   data<-dfm_estimates$data
   dfm<-dfm_estimates$dfm
   is_standardized<-dfm_estimates$is_standardized
@@ -317,10 +317,10 @@ get_forecasts <- function(dfm_estimates, n_fcst = 3){
   fcsts_only<-stats::window(fcsts, start = c(strt_yr, strt_mth))
   fcsts_only_stderr<-stats::window(fcsts_stderr, start = c(strt_yr, strt_mth))
 
-  if(nf_max > 0){
+  if (nf_max > 0){
     for(j in 1:nc){
       n_na<-nf_max-nf[j]
-      if(n_na>0) fcsts_only[1:n_na,j]<-fcsts_only_stderr[1:n_na,j]<-NA
+      if (n_na>0) fcsts_only[1:n_na,j]<-fcsts_only_stderr[1:n_na,j]<-NA
     }
   }
 
@@ -360,16 +360,16 @@ plot.JD3_DfmForecasts <- function(x, series_name = NULL, ...){
   fcst_stdev<-x$forecasts_stdev
   fcst_only<-x$forecasts_only
 
-  if(is.null(series_name)){
+  if (is.null(series_name)){
     series_name<-colnames(fcst)[1]
   }
 
-  if(series_name %in% colnames(fcst)){
+  if (series_name %in% colnames(fcst)){
     s<-fcst[,series_name]
     s_lb<-s - 1.28 * fcst_stdev[,series_name]
     s_ub<-s + 1.28 * fcst_stdev[,series_name]
     sf<-fcst_only[,series_name]
-  }else{
+  } else {
     stop("series name not found!")
   }
 
@@ -378,7 +378,3 @@ plot.JD3_DfmForecasts <- function(x, series_name = NULL, ...){
   graphics::axis(1, at=seq(stats::start(s)[1], stats::end(s)[1], by = 1), las=2)
   graphics::legend("topleft", legend=c("series", "forecasts", "80% PI"), col=c("black","red","orange"), lty=c(1, 1, 3), cex=0.8)
 }
-
-
-
-

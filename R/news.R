@@ -24,17 +24,17 @@ DFMNEWS<-'JD3_DfmNews'
   colnames(fcsts)<-fcst_periods
   rownames(fcsts)<-c("old_forecasts", "revised_forecasts", "new_forecasts")
 
-  if(target_factor_type == "Q"){
+  if (target_factor_type == "Q"){
     nc<-ncol(fcsts)
     for(j in nc:1){
       nkj<-nchar(fcst_periods[j])
       mth<-as.numeric(substr(fcst_periods[j],1,nkj-5))
-      if(mth%%3 == 0){
+      if (mth%%3 == 0){
         yr_str<-substr(fcst_periods[j],nkj-4,nkj)
         colnames(weights)[j+5]<-paste0("weights(Q", mth/3, yr_str,")")
         colnames(impacts)[j+5]<-paste0("Impacts(Q", mth/3, yr_str,")")
         colnames(fcsts)[j]<-paste0("Q", mth/3, yr_str)
-      }else{
+      } else {
         weights<-weights[,-(j+5)]
         impacts<-impacts[,-(j+5)]
         fcsts<-fcsts[,-j,drop=FALSE]
@@ -82,23 +82,23 @@ get_news<-function(dfm_estimates, new_data, target_series = NULL, n_fcst = 3){
   old_data<-dfm_estimates$data
   series_names<-colnames(old_data)
 
-  if(!is.null(target_series)){
+  if (!is.null(target_series)){
     target_series_index<-which(colnames(old_data) == target_series) - 1
 
-    if(length(target_series_index) == 0){
+    if (length(target_series_index) == 0){
       target_series_index<-0
       warning("Target series not found. The first series was considered by default instead.")
     }
-  }else{
+  } else {
     target_series<-series_names[1]
     target_series_index<-0
   }
 
-  if(n_fcst < 1){
+  if (n_fcst < 1){
     n_fcst<-3
   }
   target_factor_type<-dfm_estimates$dfm$factors_type[target_series_index + 1]
-  if(target_factor_type == "Q"){
+  if (target_factor_type == "Q"){
     n_fcst <- n_fcst*3
   }
 
@@ -153,9 +153,9 @@ plot.JD3_DfmNews <- function(x, ...){
   impacts_tot<-as.numeric(x_impacts[nr,start_i:(start_i+nc_fcst-1)])
   colnames(impacts)<-colnames(x_fcsts)
   rownames(impacts)<-x_impacts[-nr,1]
-  if(nr <= 10){
+  if (nr <= 10){
     plot_colors<-grDevices::palette.colors(nr-1)
-  }else{
+  } else {
     plot_colors<-grDevices::colorRampPalette(grDevices::palette.colors(8))(nr-1)
   }
   legend_txt<-paste0(x_impacts[-nr,1], " (", x_impacts[-nr,2], ")")
