@@ -21,8 +21,11 @@ Nowcasting is often defined as the prediction of the present, the very
 near future and the very recent past.
 
 rjd3nowcasting provides helps to operationalize the process of
-nowcasting. It can be used to specify and estimate
-Dynamic Factor Models. Recent version of the package also includes news analysis. The way the package was conceived is inspired by the [GUI add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for JDemetra+ V2.
+nowcasting. It can be used to specify and estimate Dynamic Factor
+Models. Recent version of the package also includes news analysis. The
+way the package was conceived is inspired by the [GUI
+add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for
+JDemetra+ V2.
 
 ## Installation
 
@@ -30,7 +33,11 @@ Running rjd3 packages requires **Java 17 or higher**. How to set up such
 a configuration in R is explained
 [here](https://jdemetra-new-documentation.netlify.app/#Rconfig)
 
+### Latest release
+
 To get the current stable version (from the latest release):
+
+- From GitHub:
 
 ``` r
 # install.packages("remotes")
@@ -38,11 +45,20 @@ remotes::install_github("rjdverse/rjd3toolkit@*release")
 remotes::install_github("rjdverse/rjd3nowcasting@*release", build_vignettes = TRUE)
 ```
 
-To get the current development version from GitHub:
+- From [r-universe](https://rjdverse.r-universe.dev/rjd3nowcasting):
+
+``` r
+install.packages("rjd3nowcasting", repos = c("https://rjdverse.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+### Development version
+
+You can install the development version of **rjd3nowcasting** from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("rjdverse/rjd3nowcasting", build_vignettes = TRUE)
+remotes::install_github("rjdverse/rjd3nowcasting")
 ```
 
 ## Usage
@@ -53,13 +69,13 @@ library("rjd3nowcasting")
 
 Once the package is loaded, there are four steps to follow:
 
-1. Import data 
-2. Create or update the model 
-3. Estimate the model 
-4. Get results
+1.  Import data
+2.  Create or update the model
+3.  Estimate the model
+4.  Get results
 
 Detailed information concerning each step can be found in the vignette.
-   
+
 ### 1. Input
 
 ``` r
