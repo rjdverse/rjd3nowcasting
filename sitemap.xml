@@ -1,69 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/404.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/articles/rjd3nowcasting.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/create_model.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/estimate_em.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/estimate_ml.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/estimate_pca.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/get_forecasts.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/get_news.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/get_results.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/plot.JD3_DfmForecasts.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/plot.JD3_DfmNews.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmEstimates.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmForecasts.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmNews.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmResults.html</loc>
-  </url>
-  <url>
-    <loc>https://rjdverse.github.io/rjd3nowcasting/reference/summary.JD3_DfmNews.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/404.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/LICENSE-text.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/articles/index.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/articles/rjd3nowcasting.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/authors.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/index.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/news/index.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/create_model.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/estimate_em.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/estimate_ml.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/estimate_pca.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/get_forecasts.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/get_news.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/get_results.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/index.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/plot.JD3_DfmForecasts.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/plot.JD3_DfmNews.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmEstimates.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmForecasts.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmNews.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmResults.html</loc></url>
+<url><loc>https://rjdverse.github.io/rjd3nowcasting/reference/summary.JD3_DfmNews.html</loc></url>
 </urlset>
+
