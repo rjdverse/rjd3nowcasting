@@ -8,7 +8,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-## [3.0.3] - 2024-07-12
+## [2.0.3] - 2024-07-12
 
 
 ## [2.0.0] - 2024-06-04
@@ -19,7 +19,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 * update version number
 
-[Unreleased]: https://github.com/rjdverse/rjd3nowcasting/compare/v3.0.3...HEAD
-[3.0.3]: https://github.com/rjdverse/rjd3nowcasting/compare/v2.0.0...v3.0.3
+[Unreleased]: https://github.com/rjdverse/rjd3nowcasting/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/rjdverse/rjd3nowcasting/compare/v2.0.0...v2.0.3
 [2.0.0]: https://github.com/rjdverse/rjd3nowcasting/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/rjdverse/rjd3nowcasting/releases/tag/v1.0.0
