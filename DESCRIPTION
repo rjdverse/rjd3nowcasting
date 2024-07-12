@@ -1,7 +1,7 @@
 Package: rjd3nowcasting
 Type: Package
 Title: Nowcasting with 'JDemetra+ 3.0'
-Version: 2.0.3
+Version: 2.0.3.9000
 Authors@R: c(
     person(given = "Corentin",
            family = "Lemasson",
@@ -22,7 +22,7 @@ Imports:
   rJava (>= 1.0-6),
   rjd3toolkit (>= 3.2.2)
 Remotes: 
-    github::rjdverse/rjd3toolkit@*release
+    github::rjdverse/rjd3toolkit
 SystemRequirements: Java (>= 17)
 License: EUPL
 URL: https://github.com/rjdverse/rjd3nowcasting,
