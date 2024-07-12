@@ -31,23 +31,36 @@ knitr::opts_chunk$set(
 
 Nowcasting is often defined as the prediction of the present, the very near future and the very recent past. 
 
-rjd3nowcasting provides helps to operationalize the process of nowcasting. This first version can be used to specify and estimate dynamic factor models. 
-A later version is expected to include the concept of "news" similar to the [Nowcasting plugin](https://github.com/nbbrd/jdemetra-nowcasting/tree/master) 
-for the Graphical User Interface of JDemetra+ v2.
+rjd3nowcasting provides helps to operationalize the process of nowcasting. It can be used to specify and estimate Dynamic Factor Models. 
+Recent version of the package also includes news analysis. The way the package was conceived is inspired by the [GUI add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for JDemetra+ V2.
 
 ## Installation
 
 Running rjd3 packages requires **Java 17 or higher**. How to set up such a configuration in R is explained [here](https://jdemetra-new-documentation.netlify.app/#Rconfig)
 
+
+### Latest release
+
 To get the current stable version (from the latest release):
+
+- From GitHub:
 
 ```{r, echo = TRUE, eval = FALSE}
 # install.packages("remotes")
 remotes::install_github("rjdverse/rjd3toolkit@*release")
-remotes::install_github("rjdverse/rjd3nowcasting@*release")
+remotes::install_github("rjdverse/rjd3nowcasting@*release", build_vignettes = TRUE)
 ```
 
-To get the current development version from GitHub:
+- From [r-universe](https://rjdverse.r-universe.dev/rjd3nowcasting):
+
+```{r, echo = TRUE, eval = FALSE}
+install.packages("rjd3nowcasting", repos = c("https://rjdverse.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+
+### Development version
+
+You can install the development version of **rjd3nowcasting** from [GitHub](https://github.com/) with:
 
 ```{r, echo = TRUE, eval = FALSE}
 # install.packages("remotes")
@@ -57,59 +70,86 @@ remotes::install_github("rjdverse/rjd3nowcasting")
 
 ## Usage
 
-```{r, echo = TRUE, eval = TRUE}
+``` r
 library("rjd3nowcasting")
 ```
 
+Once the package is loaded, there are four steps to follow:
 
-### Input
+1. Import data 
+2. Create or update the model 
+3. Estimate the model 
+4. Get results
 
-```{r, echo = TRUE, eval = TRUE}
+Detailed information concerning each step can be found in the vignette.
+   
+### 1. Input
+
+``` r
 set.seed(100)
-data <- ts(
+data0 <- stats::ts(
     data = matrix(rnorm(500), 100, 5), 
     frequency = 12, 
     start = c(2010, 1)
 )
-data[100, 1] <- data[99:100, 2] <- data[(1:100)[-seq(3, 100, 3)], 5] <- NA
-```
+data0[100, 1] <- data0[99:100, 2] <- data0[(1:100)[-seq(3, 100, 3)], 5] <- NA
 
-
-### Model
-
-```{r, echo = TRUE, eval = TRUE}
-dfm_model <- model(
-    nfactors = 2,
-    nlags = 2,
-    factors_type = c("M", "M", "YoY", "M", "Q"),
-    factors_loading = matrix(data = TRUE, 5, 2),
-    var_init = "Unconditional"
+data1 <- stats::ts(
+    data = rbind(data0, c(NA, NA, 1, 1, NA)), 
+    frequency = 12, 
+    start = c(2010, 1)
 )
+data1[100,1] <- data1[99,2] <- 1
 ```
 
+### 2. Create or update the model
 
-### Estimation
+``` r
+### Create model from scratch
+dfm0 <- create_model(nfactors=2,
+                     nlags=2,
+                     factors_type = c("M", "M", "YoY", "M", "Q"),
+                     factors_loading = matrix(data = TRUE, 5, 2),
+                     var_init = "Unconditional")
 
-```{r, echo = TRUE, eval = TRUE}
-rslt_ml <- estimate_ml(dfm_model, data)
-# or rslt_em<-estimate_em(dfm_model, data)
-# or rslt_pca<-estimate_pca(dfm_model, data)
+### Update model
+est0 <- estimate_em(dfm0, data0) # cfr. next step
+
+dfm1 <- est0$dfm # R object (list) to potentially save from one time to another  
+# or, equivalently,
+dfm1 <- create_model(nfactors=2,
+                     nlags=2,
+                     factors_type = c("M", "M", "YoY", "M", "Q"),
+                     factors_loading = matrix(data = TRUE, 5, 2),
+                     var_init = "Unconditional",
+                     var_coefficients = est0$dfm$var_coefficients,
+                     var_errors_variance = est0$dfm$var_errors_variance,
+                     measurement_coefficients = est0$dfm$measurement_coefficients,
+                     measurement_errors_variance = est0$dfm$measurement_errors_variance)
 ```
 
+### 3. Estimate the model
 
-### Results
+``` r
+est1 <- estimate_ml(dfm1, data1)
+# or est1<-estimate_em(dfm1, data1)
+# or est1<-estimate_pca(dfm1, data1)
+```
 
-```{r, echo = TRUE, eval = TRUE}
-fcst <- get_forecasts(rslt_ml, nf = 2, forecasts_only = TRUE)
-params <- get_parameters(rslt_ml)
-factors <- get_factors(rslt_ml)
+### 4. Get results
+
+``` r
+rslt1 <- get_results(est1)
+print(rslt1)
+fcst1 <- get_forecasts(est1, n_fcst = 2)
+print(fcst1)
+plot(fcst1)
+
+news1 <- get_news(est0, data1, target_series = "Series 1", n_fcst = 2)
+print(news1)
+plot(news1)
 # ...
-
-print(rslt_ml)
-summary(rslt_ml)
-plot(rslt_ml)
 ```
-
 
 ## Package Maintenance and contributing
 
