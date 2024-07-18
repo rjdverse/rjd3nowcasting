@@ -1,12 +1,17 @@
 Package: rjd3nowcasting
 Type: Package
 Title: Nowcasting with 'JDemetra+ 3.0'
-Version: 2.0.2
-Authors@R: 
+Version: 2.0.3.9000
+Authors@R: c(
     person(given = "Corentin",
            family = "Lemasson",
            role = c("aut", "cre"),
-           email = "corentin.lemasson@nbb.be")
+           email = "corentin.lemasson@nbb.be"),
+    person(given = "Tanguy", 
+           family = "Barthelemy", 
+           role = c("ctb", "art"),
+           email ="tanguy.barthelemy@insee.fr")
+    )
 Description: Interface around 'JDemetra+ 3.x' 
              (<https://github.com/jdemetra/jdplus-nowcasting>), TSACE project.
 	     It defines and estimates Dynamic Factor Models with the
@@ -16,8 +21,8 @@ Depends:
 Imports:
   rJava (>= 1.0-6),
   rjd3toolkit (>= 3.2.2)
-Remotes:
-  github::rjdverse/rjd3toolkit@*release
+Remotes: 
+    github::rjdverse/rjd3toolkit
 SystemRequirements: Java (>= 17)
 License: EUPL
 URL: https://github.com/rjdverse/rjd3nowcasting,
