@@ -30,6 +30,7 @@ URL: https://github.com/rjdverse/rjd3nowcasting,
 BugReports: https://github.com/rjdverse/rjd3nowcasting/issues
 Encoding: UTF-8
 Collate: 
+    'data.R'
     'estimation.R'
     'news.R'
     'results.R'
@@ -39,3 +40,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+LazyData: true
