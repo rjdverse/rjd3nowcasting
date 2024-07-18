@@ -71,7 +71,6 @@ Detailed information concerning each step follows below the example.
 # Quick start example
 
 ## 1. Data
-
 set.seed(100)
 data0 <- stats::ts(
     data = matrix(rnorm(500), 100, 5), 
