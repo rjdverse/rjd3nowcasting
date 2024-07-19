@@ -86,6 +86,7 @@ get_news<-function(dfm_estimates, new_data, target_series = NULL, n_fcst = 3){
     target_series_index<-which(colnames(old_data) == target_series) - 1
 
     if (length(target_series_index) == 0){
+      target_series<-series_names[1]
       target_series_index<-0
       warning("Target series not found. The first series was considered by default instead.")
     }
