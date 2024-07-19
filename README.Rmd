@@ -70,7 +70,7 @@ remotes::install_github("rjdverse/rjd3nowcasting")
 
 ## Usage
 
-``` r
+```{r loading-library}
 library("rjd3nowcasting")
 ```
 
@@ -85,71 +85,72 @@ Detailed information concerning each step can be found in the vignette.
    
 ### 1. Input
 
-``` r
-set.seed(100)
-data0 <- stats::ts(
-    data = matrix(rnorm(500), 100, 5), 
-    frequency = 12, 
-    start = c(2010, 1)
-)
-data0[100, 1] <- data0[99:100, 2] <- data0[(1:100)[-seq(3, 100, 3)], 5] <- NA
-
-data1 <- stats::ts(
-    data = rbind(data0, c(NA, NA, 1, 1, NA)), 
-    frequency = 12, 
-    start = c(2010, 1)
-)
-data1[100,1] <- data1[99,2] <- 1
+```{r input}
+data("data0", "data1")
+data0_ts<-ts(data0[,-1], start=c(2012,1), frequency = 12)
+data1_ts<-ts(data1[,-1], start=c(2012,1), frequency = 12)
 ```
 
 ### 2. Create or update the model
 
-``` r
-### Create model from scratch
-dfm0 <- create_model(nfactors=2,
-                     nlags=2,
-                     factors_type = c("M", "M", "YoY", "M", "Q"),
-                     factors_loading = matrix(data = TRUE, 5, 2),
-                     var_init = "Unconditional")
+```{r model}
+### Create a model from scratch
+ns<-ncol(data0_ts)
+types<-c("M","M","Q","YoY","YoY","M","M","YoY","YoY","YoY")
+loadings1<-matrix(data=TRUE, ns, 2)
+#loadings2<-matrix(data=c(rep(TRUE,ns+5),rep(FALSE,5)), ns, 2)
+dfm0_init <- create_model(nfactors=2,
+                          nlags=2,
+                          factors_type = types,
+                          factors_loading = loadings1,
+                          var_init = "Unconditional")
 
-### Update model
-est0 <- estimate_em(dfm0, data0) # cfr. next step
-
-dfm1 <- est0$dfm # R object (list) to potentially save from one time to another  
+### Update an existing model
+est0 <- estimate_em(dfm0_init, data0_ts) # cfr. next step
+dfm1_init <- est0$dfm # R object (list) to save from one time to another 
 # or, equivalently,
-dfm1 <- create_model(nfactors=2,
-                     nlags=2,
-                     factors_type = c("M", "M", "YoY", "M", "Q"),
-                     factors_loading = matrix(data = TRUE, 5, 2),
-                     var_init = "Unconditional",
-                     var_coefficients = est0$dfm$var_coefficients,
-                     var_errors_variance = est0$dfm$var_errors_variance,
-                     measurement_coefficients = est0$dfm$measurement_coefficients,
-                     measurement_errors_variance = est0$dfm$measurement_errors_variance)
+# dfm1_init <- create_model(nfactors=2,
+#                           nlags=2,
+#                           factors_type = types,
+#                           factors_loading = loadings1,
+#                           var_init = "Unconditional",
+#                           var_coefficients = est0$dfm$var_coefficients,
+#                           var_errors_variance = est0$dfm$var_errors_variance,
+#                           measurement_coefficients = est0$dfm$measurement_coefficients,
+#                           measurement_errors_variance = est0$dfm$measurement_errors_variance)
 ```
 
 ### 3. Estimate the model
 
-``` r
-est1 <- estimate_ml(dfm1, data1)
-# or est1<-estimate_em(dfm1, data1)
-# or est1<-estimate_pca(dfm1, data1)
+```{r estimation}
+est0 <- estimate_ml(dfm0_init, data0_ts)
+# or est0<-estimate_em(dfm0_init, data0_ts)
+# or est0<-estimate_pca(dfm0_init, data0_ts) # to be avoided unless you only have monthly data 
 ```
 
 ### 4. Get results
 
-``` r
-rslt1 <- get_results(est1)
-print(rslt1)
-fcst1 <- get_forecasts(est1, n_fcst = 2)
-print(fcst1)
-plot(fcst1)
+#### Model and forecasts
 
-news1 <- get_news(est0, data1, target_series = "Series 1", n_fcst = 2)
-print(news1)
-plot(news1)
-# ...
+```{r results}
+rslt0 <- get_results(est0)
+print(rslt0)
+
+fcsts0 <- get_forecasts(est0, n_fcst = 3)
+print(fcsts0)
+plot(fcsts0, series_name = "FR_PVI")
+# Note: impact of Covid-19 on the model estimate could be eliminated by treating affected indicators as missing data during this period. This has not been done in this example. 
 ```
+
+#### News analysis
+
+```{r news}
+news1 <- get_news(est0, data1_ts, target_series = "FR_PVI", n_fcst = 3)
+news1$impacts
+news1$forecasts
+plot(news1)
+```
+
 
 ## Package Maintenance and contributing
 
