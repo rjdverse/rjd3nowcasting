@@ -11,6 +11,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 * Add real data for illustration
 
+### Fixed
+
+* Correct display glitch in news graph  
+
 ## [2.0.3] - 2024-07-12
 
 ## [2.0.0] - 2024-06-04
