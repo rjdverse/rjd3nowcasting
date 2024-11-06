@@ -84,8 +84,8 @@
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rjdverse/rjd3toolkit@*release"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rjdverse/rjd3nowcasting@*release"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rjdverse/rjd3toolkit@*release"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rjdverse/rjd3nowcasting@*release"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>From <a href="https://rjdverse.r-universe.dev/rjd3nowcasting" class="external-link">r-universe</a>:</li>
 </ul>
@@ -98,7 +98,7 @@
 <p>You can install the development version of <strong>rjd3nowcasting</strong> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rjdverse/rjd3nowcasting"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rjdverse/rjd3nowcasting"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -139,7 +139,7 @@
 <span></span>
 <span><span class="co">### Update an existing model</span></span>
 <span><span class="va">est0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_em.html">estimate_em</a></span><span class="op">(</span><span class="va">dfm0_init</span>, <span class="va">data0_ts</span><span class="op">)</span> <span class="co"># cfr. next step</span></span>
-<span><span class="va">dfm1_init</span> <span class="op">&lt;-</span> <span class="va">est0</span><span class="op">$</span><span class="va">dfm</span> <span class="co"># R object (list) to save from one time to another </span></span>
+<span><span class="va">dfm1_init</span> <span class="op">&lt;-</span> <span class="va">est0</span><span class="op">$</span><span class="va">dfm</span> <span class="co"># R object (list) to save from one time to another</span></span>
 <span><span class="co"># or, equivalently,</span></span>
 <span><span class="co"># dfm1_init &lt;- create_model(nfactors=2,</span></span>
 <span><span class="co">#                           nlags=2,</span></span>
@@ -157,7 +157,7 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">est0</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_ml.html">estimate_ml</a></span><span class="op">(</span><span class="va">dfm0_init</span>, <span class="va">data0_ts</span><span class="op">)</span></span>
 <span><span class="co"># or est0&lt;-estimate_em(dfm0_init, data0_ts)</span></span>
-<span><span class="co"># or est0&lt;-estimate_pca(dfm0_init, data0_ts) # to be avoided unless you only have monthly data </span></span></code></pre></div>
+<span><span class="co"># or est0&lt;-estimate_pca(dfm0_init, data0_ts) # to be avoided unless you only have monthly data</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_4-get-results">4. Get results<a class="anchor" aria-label="anchor" href="#id_4-get-results"></a>
@@ -211,7 +211,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fcsts0</span>, series_name <span class="op">=</span> <span class="st">"FR_PVI"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-results-1.png" width="100%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Note: impact of Covid-19 on the model estimate could be eliminated by treating affected indicators as missing data during this period. This has not been done in this example. </span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Note: impact of Covid-19 on the model estimate could be eliminated by treating affected indicators as missing data during this period. This has not been done in this example.</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="news-analysis">News analysis<a class="anchor" aria-label="anchor" href="#news-analysis"></a>
@@ -320,7 +320,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

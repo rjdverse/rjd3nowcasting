@@ -98,10 +98,10 @@ environment.</p>
 <h2 id="installation-settings">Installation settings<a class="anchor" aria-label="anchor" href="#installation-settings"></a>
 </h2>
 <p>This package relies on the specific Java libraries of <a href="https://github.com/jdemetra/jdplus-nowcasting" class="external-link">JDemetra+ v3</a>
-and on the package <a href="https://github.com/rjdemetra/rjd3toolkit" class="external-link">rjd3toolkit</a> of <a href="https://github.com/rjdverse" class="external-link">rjdverse</a>. Prior the installation,
-you must ensure to have a Java version &gt;= 17.0 on your computer. If
-you need to use a portable version of Java to fill this request, you can
-follow the instructions in the <a href="https://jdemetra-new-documentation.netlify.app/#Rconfig" class="external-link">installation
+and on the package <a href="https://github.com/rjdemetra/rjd3toolkit" class="external-link">rjd3toolkit</a> of <a href="https://github.com/rjdverse?view_as=public" class="external-link">rjdverse</a>. Prior
+the installation, you must ensure to have a Java version &gt;= 17.0 on
+your computer. If you need to use a portable version of Java to fill
+this request, you can follow the instructions in the <a href="https://jdemetra-new-documentation.netlify.app/#Rconfig" class="external-link">installation
 manual</a>.</p>
 <p>In addition to a Java version &gt;= 17.0, you must have a recent
 version of the R packages rJava (&gt;= 1.0.6) and RProtobuf
@@ -113,11 +113,11 @@ must install from GitHub beforehand.</p>
 <code class="sourceCode R"><span></span>
 <span><span class="co"># To get the current stable version (from the latest release):</span></span>
 <span><span class="co">### install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rjdverse/rjd3toolkit@*release"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rjdverse/rjd3nowcasting@*release"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rjdverse/rjd3toolkit@*release"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rjdverse/rjd3nowcasting@*release"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># or to get the current development version from GitHub:</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rjdverse/rjd3nowcasting"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rjdverse/rjd3nowcasting"</span><span class="op">)</span></span></code></pre></div>
 <p>Note that depending on the R packages that are already installed on
 your computer, you might also be asked to install or re-install some
 other packages from CRAN.</p>
@@ -142,15 +142,15 @@ example.</p>
 <span><span class="co">## 1. Data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">data0</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>, <span class="fl">100</span>, <span class="fl">5</span><span class="op">)</span>, </span>
-<span>    frequency <span class="op">=</span> <span class="fl">12</span>, </span>
+<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>, <span class="fl">100</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>    frequency <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>    start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">data0</span><span class="op">[</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">data0</span><span class="op">[</span><span class="fl">99</span><span class="op">:</span><span class="fl">100</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">data0</span><span class="op">[</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">100</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span>, <span class="fl">5</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
 <span></span>
 <span><span class="va">data1</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">data0</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>    frequency <span class="op">=</span> <span class="fl">12</span>, </span>
+<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">data0</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    frequency <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>    start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">data1</span><span class="op">[</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">data1</span><span class="op">[</span><span class="fl">99</span>,<span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
@@ -166,12 +166,12 @@ example.</p>
 <span>                     var_init <span class="op">=</span> <span class="st">"Unconditional"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">### Update model</span></span>
-<span><span class="co"># ! Recall: due to potential presence of local minimum  and lack of  </span></span>
-<span><span class="co"># identification issue, it is always better to start from a previously </span></span>
-<span><span class="co"># estimated model when available.  </span></span>
+<span><span class="co"># ! Recall: due to potential presence of local minimum  and lack of</span></span>
+<span><span class="co"># identification issue, it is always better to start from a previously</span></span>
+<span><span class="co"># estimated model when available.</span></span>
 <span><span class="va">est0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_em.html">estimate_em</a></span><span class="op">(</span><span class="va">dfm0</span>, <span class="va">data0</span><span class="op">)</span> <span class="co"># cfr. next step</span></span>
 <span></span>
-<span><span class="va">dfm1</span> <span class="op">&lt;-</span> <span class="va">est0</span><span class="op">$</span><span class="va">dfm</span> <span class="co"># R object (list) to potentially save from one time to another  </span></span>
+<span><span class="va">dfm1</span> <span class="op">&lt;-</span> <span class="va">est0</span><span class="op">$</span><span class="va">dfm</span> <span class="co"># R object (list) to potentially save from one time to another</span></span>
 <span><span class="co"># or, equivalently,</span></span>
 <span><span class="va">dfm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_model.html">create_model</a></span><span class="op">(</span>nfactors<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                     nlags<span class="op">=</span><span class="fl">2</span>,</span>
@@ -569,7 +569,7 @@ Research NO 256.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
