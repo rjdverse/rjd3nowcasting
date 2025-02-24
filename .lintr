@@ -52,6 +52,12 @@ linters: lintr::all_linters(
         redundant_ifelse_linter = NULL,
         matrix_apply_linter = NULL,
         duplicate_argument_linter = NULL,
-        literal_coercion_linter = NULL
+        literal_coercion_linter = NULL,
+        return_linter = NULL,
+        object_overwrite_linter = NULL,
+        condition_call_linter = NULL,
+        rep_len_linter = NULL,
+        if_switch_linter = NULL,
+        unnecessary_nesting_linter = NULL
     )
 encoding: "UTF-8"
