@@ -140,7 +140,6 @@ This step is external to the package. Recall that DFM require all input data to 
 
 In case of dynamic work, the columns of the dataset should remain the same from one time to another and in the same order. Only additional rows can be added reflecting the new data coming in.
 
-
 ## 2. Create/Update model
 
 ### 2.1. Create a new model

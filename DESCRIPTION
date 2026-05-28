@@ -28,7 +28,7 @@ Remotes:
     github::rjdverse/rjd3toolkit
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.3
 SystemRequirements: Java (>= 17)
 Collate: 
     'data.R'

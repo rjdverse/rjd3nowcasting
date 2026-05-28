@@ -4,12 +4,21 @@
 \alias{get_forecasts}
 \title{Get DFM forecasts}
 \usage{
-get_forecasts(dfm_estimates, n_fcst = 3)
+get_forecasts(
+  dfm_estimates,
+  n_fcst = 3,
+  estim_missing = FALSE,
+  mask_q_m = FALSE
+)
 }
 \arguments{
 \item{dfm_estimates}{an object of class 'JD3_DfmEstimates'}
 
 \item{n_fcst}{Integer. Number of forecast periods required.}
+
+\item{estim_missing}{Boolean. Indicates whether missing values should be estimated before the start of the forecasting period. The default is `FALSE`.}
+
+\item{mask_q_m}{Boolean. Indicates whether the estimates of the two first months of the quarter should be masked when the factor type is 'Q'. The default is `FALSE`.}
 }
 \value{
 an object of class 'JD3_DfmForecasts'
