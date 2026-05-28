@@ -33,11 +33,11 @@ knitr::opts_chunk$set(
 Nowcasting is often defined as the prediction of the present, the very near future and the very recent past. 
 
 rjd3nowcasting provides helps to operationalize the process of nowcasting. It can be used to specify and estimate Dynamic Factor Models. 
-Recent version of the package also includes news analysis. The way the package was conceived is inspired by the [GUI add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for JDemetra+ V2.
+This package also includes news analysis. The way the package was conceived is inspired by the [GUI add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for JDemetra+ V2.
 
 ## Installation
 
-Running rjd3 packages requires **Java 17 or higher**. How to set up such a configuration in R is explained [here](https://jdemetra-new-documentation.netlify.app/#Rconfig)
+Running rjd3 packages requires **Java 21 or higher**. How to set up such a configuration in R is explained [here](https://jdemetra-new-documentation.netlify.app/#Rconfig)
 
 
 ### Latest release
@@ -65,7 +65,7 @@ You can install the development version of **rjd3nowcasting** from [GitHub](http
 
 ```{r, echo = TRUE, eval = FALSE}
 # install.packages("remotes")
-remotes::install_github("rjdverse/rjd3nowcasting")
+remotes::install_github("rjdverse/rjd3nowcasting", build_vignettes = TRUE)
 ```
 
 

@@ -74,17 +74,19 @@ DFMFORECASTS<-'JD3_DfmForecasts'
 
   return(
     list(
-      series_names=colnames(data),
-      start=start,
-      freq=freq,
-      original_data=rjd3toolkit::result(jrslts, "input"),
-      sample_mean=rjd3toolkit::result(jrslts, "sample_mean"),
-      sample_stddev=rjd3toolkit::result(jrslts, "sample_stddev"),
-      transformed_data=rjd3toolkit::result(jrslts, "input_transformed"),
-      forecasts_T=rjd3toolkit::result(jrslts, paste0("forecasts_transformed(", n_out,")")),
-      forecasts_T_stderr=rjd3toolkit::result(jrslts, paste0("forecasts_transformed_stderr(", n_out,")")),
-      forecasts=rjd3toolkit::result(jrslts, paste0("forecasts(", n_out,")")),
-      forecasts_stderr=rjd3toolkit::result(jrslts, paste0("forecasts_stderr(", n_out,")"))
+        series_names = colnames(data),
+        start = start,
+        freq = freq,
+        original_data = rjd3toolkit::result(jrslts, "input"),
+        sample_mean = rjd3toolkit::result(jrslts, "sample_mean"),
+        sample_stddev = rjd3toolkit::result(jrslts, "sample_stddev"),
+        transformed_data = rjd3toolkit::result(jrslts, "input_transformed"),
+        forecasts_T = rjd3toolkit::result(jrslts, paste0("forecasts_transformed(", n_out, ")")),
+        forecasts_T_M = rjd3toolkit::result(jrslts, paste0("forecasts_transformed_miss(", n_out, ")")),
+        forecasts_T_stderr = rjd3toolkit::result(jrslts, paste0("forecasts_transformed_stderr(", n_out, ")")),
+        forecasts = rjd3toolkit::result(jrslts, paste0("forecasts(", n_out, ")")),
+        forecasts_M = rjd3toolkit::result(jrslts, paste0("forecasts_miss(", n_out, ")")),
+        forecasts_stderr = rjd3toolkit::result(jrslts, paste0("forecasts_stderr(", n_out, ")"))
     )
   )
 }
@@ -262,6 +264,8 @@ print.JD3_DfmResults <- function(x, ...){
 #'
 #' @param dfm_estimates an object of class 'JD3_DfmEstimates'
 #' @param n_fcst Integer. Number of forecast periods required.
+#' @param estim_missing Boolean. Indicates whether missing values should be estimated before the start of the forecasting period. The default is `FALSE`.
+#' @param mask_q_m Boolean. Indicates whether the estimates of the two first months of the quarter should be masked when the factor type is 'Q'. The default is `FALSE`.
 #' @return an object of class 'JD3_DfmForecasts'
 #' @export
 #'
@@ -277,7 +281,10 @@ print.JD3_DfmResults <- function(x, ...){
 #' est_em<-estimate_em(dfm, data)
 #' fcst<-get_forecasts(est_em, n_fcst = 2)
 #'
-get_forecasts <- function(dfm_estimates, n_fcst = 3){
+get_forecasts <- function(dfm_estimates,
+                          n_fcst = 3,
+                          estim_missing = FALSE,
+                          mask_q_m = FALSE){
 
   if (n_fcst < 1) n_fcst<-1
   data<-dfm_estimates$data
@@ -290,14 +297,37 @@ get_forecasts <- function(dfm_estimates, n_fcst = 3){
   # Transformed series
   freq<-dfm_rslts$freq
   start<-dfm_rslts$start
-  fcsts_t<-stats::ts(dfm_rslts$forecasts_T, frequency=freq, start=start)
+
+  fcsts_t <- stats::ts(
+      if (estim_missing) dfm_rslts$forecasts_T_M else dfm_rslts$forecasts_T,
+      frequency = freq,
+      start = start
+  )
   fcsts_t_stderr<-stats::ts(dfm_rslts$forecasts_T_stderr, frequency=freq, start=start)
   colnames(fcsts_t)<-colnames(fcsts_t_stderr)<-dfm_rslts$series_names
 
   # Original series
-  fcsts<-stats::ts(dfm_rslts$forecasts, frequency=freq, start=start)
+  fcsts <- stats::ts(
+      if (estim_missing) dfm_rslts$forecasts_M else dfm_rslts$forecasts,
+      frequency = freq,
+      start = start
+  )
   fcsts_stderr<-stats::ts(dfm_rslts$forecasts_stderr, frequency=freq, start=start)
   colnames(fcsts)<-colnames(fcsts_stderr)<-dfm_rslts$series_names
+
+  # Mask monthly data from quarterly variables if requested
+  if (mask_q_m) {
+      f_type <- dfm_estimates$dfm$factors_type
+
+      month_in_year <- cycle(fcsts)
+      period_to_mask <- month_in_year %% 3 != 0
+
+      for (j in seq_len(ncol(fcsts))) {
+          if (f_type[j] == "Q") {
+              fcsts[period_to_mask, j] <- NA
+          }
+      }
+  }
 
   # Restrict output to forecasts only
   data<-stats::ts(dfm_rslts$original_data, frequency=freq, start=start)
