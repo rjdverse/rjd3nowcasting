@@ -7,6 +7,8 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rjd3nowcasting)](https://CRAN.R-project.org/package=rjd3nowcasting)
+[![Mentioned in Awesome Official
+Statistics](https://awesome.re/mentioned-badge.svg)](https://github.com/SNStatComp/awesome-official-statistics-software)
 
 [![R-CMD-check](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/R-CMD-check.yaml)
 [![lint](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/lint.yaml/badge.svg)](https://github.com/rjdverse/rjd3nowcasting/actions/workflows/lint.yaml)
@@ -22,8 +24,8 @@ near future and the very recent past.
 
 rjd3nowcasting provides helps to operationalize the process of
 nowcasting. It can be used to specify and estimate Dynamic Factor
-Models. Recent version of the package also includes news analysis. The
-way the package was conceived is inspired by the [GUI
+Models. This package also includes news analysis. The way the package
+was conceived is inspired by the [GUI
 add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for
 JDemetra+ V2.
 
