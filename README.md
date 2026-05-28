@@ -58,7 +58,7 @@ You can install the development version of **rjd3nowcasting** from
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("rjdverse/rjd3nowcasting")
+remotes::install_github("rjdverse/rjd3nowcasting", build_vignettes = TRUE)
 ```
 
 ## Usage
