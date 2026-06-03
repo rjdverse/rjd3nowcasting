@@ -3,33 +3,20 @@
 ## All functions
 
 - [`create_model()`](https://rjdverse.github.io/rjd3nowcasting/reference/create_model.md)
-  : Create Dynamic Factor Model
+  : Create a Dynamic Factor Model
 - [`estimate_em()`](https://rjdverse.github.io/rjd3nowcasting/reference/estimate_em.md)
-  : Estimate DFM with Expectations-Maximization algorithm
+  : Estimate a Dynamic Factor Model Using the Expectations-Maximization
+  Algorithm
 - [`estimate_ml()`](https://rjdverse.github.io/rjd3nowcasting/reference/estimate_ml.md)
-  : Estimate DFM with Maximum Likelihood
+  : Estimate a Dynamic Factor Model by Maximum Likelihood
 - [`estimate_pca()`](https://rjdverse.github.io/rjd3nowcasting/reference/estimate_pca.md)
-  : Estimate DFM with Principal components Analysis
+  : Estimate a Dynamic Factor Model Using Principal Components Analysis
 - [`get_forecasts()`](https://rjdverse.github.io/rjd3nowcasting/reference/get_forecasts.md)
-  : Get DFM forecasts
+  : Get Dynamic Factor Model Forecasts
 - [`get_news()`](https://rjdverse.github.io/rjd3nowcasting/reference/get_news.md)
-  : DFM News analysis
+  : Perform News Analysis for Forecast Updates in Dynamic Factor Models
 - [`get_results()`](https://rjdverse.github.io/rjd3nowcasting/reference/get_results.md)
-  : Get DFM results
+  : Get Dynamic Factor Model Results
 - [`data0`](https://rjdverse.github.io/rjd3nowcasting/reference/macroIndicators.md)
   [`data1`](https://rjdverse.github.io/rjd3nowcasting/reference/macroIndicators.md)
   : Datasets including some French macro-economic variables
-- [`plot(`*`<JD3_DfmForecasts>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/plot.JD3_DfmForecasts.md)
-  : Plot function for objects of class 'JD3_DfmForecasts'
-- [`plot(`*`<JD3_DfmNews>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/plot.JD3_DfmNews.md)
-  : Plot function for objects of class 'JD3_DfmNews'
-- [`print(`*`<JD3_DfmEstimates>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmEstimates.md)
-  : Print function for objects of class 'JD3_DfmEstimates'
-- [`print(`*`<JD3_DfmForecasts>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmForecasts.md)
-  : Print function for objects of class 'JD3_DfmForecasts'
-- [`print(`*`<JD3_DfmNews>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmNews.md)
-  : Print function for objects of class 'JD3_DfmNews'
-- [`print(`*`<JD3_DfmResults>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmResults.md)
-  : Print function for objects of class 'JD3_DfmResults'
-- [`summary(`*`<JD3_DfmNews>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/summary.JD3_DfmNews.md)
-  : Summary function for objects of class 'JD3_DfmNews'

@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Nowcasting with 'JDemetra+ v3.x'">
 </head>
@@ -80,34 +80,29 @@ Lemasson</h4>
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>This package can be use to specify and estimate Dynamic Factor Models
-in a very efficient way to provide consistent forecasts. Recent version
-of the package also includes news analysis. Analyzing news, which are
-defined as the discrepancy between the newly released figures and its
-forecasts, helps to interpret forecast revisions. As mentioned by
-Banbura and Modugno (2010), it enables us to produce statements like
+(DFM) in a very efficient way to provide consistent forecasts. Recent
+version of the package also includes news analysis. Analyzing news,
+which are defined as the discrepancy between the newly released figures
+and its forecasts, helps to interpret forecast revisions. As mentioned
+by Banbura and Modugno (2010), it enables us to produce statements like
 “the forecast was revised up by … because of higher than expected
 release of …”.</p>
 <p>This R package uses the efficient libraries of <a href="https://github.com/jdemetra/jdplus-nowcasting" class="external-link">JDemetra+ v3</a>.
-The way the package was conceived is inspired by the <a href="https://github.com/nbbrd/jdemetra-nowcasting" class="external-link">GUI add-in</a>
-developed for JDemetra+ V2 and it provides about the same functionality
-(except for the real-time simulation), but in the flexible R
-environment.</p>
+The way the package was conceived is inspired by the <a href="https://github.com/nbbrd/jdemetra-nowcasting" class="external-link">JDemetra+ graphical
+user interface add-in</a> developed for JDemetra+ v2 and it provides
+about the same functionality (except for the real-time simulation), but
+in the flexible R environment.</p>
 </div>
 <div class="section level2">
 <h2 id="installation-settings">Installation settings<a class="anchor" aria-label="anchor" href="#installation-settings"></a>
 </h2>
 <p>This package relies on the specific Java libraries of <a href="https://github.com/jdemetra/jdplus-nowcasting" class="external-link">JDemetra+ v3</a>
-and on the package <a href="https://github.com/rjdemetra/rjd3toolkit" class="external-link">rjd3toolkit</a> of <a href="https://github.com/rjdverse?view_as=public" class="external-link">rjdverse</a>. Prior
-the installation, you must ensure to have a Java version &gt;= 17.0 on
+and on the package <a href="https://github.com/rjdemetra/rjd3toolkit" class="external-link">rjd3toolkit</a> of the
+<a href="https://github.com/rjdverse?view_as=public" class="external-link">rjdverse</a>. Prior
+the installation, you must ensure to have a Java version &gt;= 21.0 on
 your computer. If you need to use a portable version of Java to fill
 this request, you can follow the instructions in the <a href="https://jdemetra-new-documentation.netlify.app/#Rconfig" class="external-link">installation
 manual</a>.</p>
-<p>In addition to a Java version &gt;= 17.0, you must have a recent
-version of the R packages rJava (&gt;= 1.0.6) and RProtobuf
-(&gt;=0.4.17) that you can download from CRAN.</p>
-<p>The package <a href="https://github.com/rjdverse/rjd3nowcasting" class="external-link">rjd3nowcasting</a>
-depends on the package <a href="https://github.com/rjdverse/rjd3toolkit" class="external-link">rjd3toolkit</a> that you
-must install from GitHub beforehand.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># To get the current stable version (from the latest release):</span></span>
@@ -133,12 +128,12 @@ other packages from CRAN.</p>
 <li>Estimate the model</li>
 <li>Get results</li>
 </ol>
-<p>Detailed information concerning each step follows below the
+<p>Detailed information concerning each step follows below this
 example.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Quick start example</span></span>
 <span></span>
-<span><span class="co">## 1. Data</span></span>
+<span><span class="co">## 1. Data (stationary data is generated, no transformation needed)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">data0</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>, <span class="fl">100</span>, <span class="fl">5</span><span class="op">)</span>,</span>
@@ -204,14 +199,29 @@ example.</p>
 <div class="section level3">
 <h3 id="prepare-and-import-data">1. Prepare and import data<a class="anchor" aria-label="anchor" href="#prepare-and-import-data"></a>
 </h3>
-<p>This step is external to the package. Recall that DFM require all
-input data to be stationary. Once the data have been prepared
-accordingly and imported in R, it is required to create a time-series
-object with the data by using the well-known <code><a href="https://rdrr.io/r/stats/ts.html" class="external-link">stats::ts()</a></code>
-function like in the example.</p>
-<p>In case of dynamic work, the columns of the dataset should remain the
-same from one time to another and in the same order. Only additional
-rows can be added reflecting the new data coming in.</p>
+<p>This step needs to be carried out outside of this package. Recall
+that Dynamic Factor Models require the input data to be stationary. Once
+the data have been appropriately transformed (when necessary) and
+imported in R, it is required to create a multivariate time-series
+object with the data by using the <code><a href="https://rdrr.io/r/stats/ts.html" class="external-link">stats::ts()</a></code> function, as
+illustrated in the example.</p>
+<p>A typical transformation workflow first involves applying a seasonal
+adjustment to the data, followed by taking difference of logarithms. For
+the seasonal adjustment step, we recommend using either the <a href="https://github.com/jdemetra/jdplus-main" class="external-link">JDemetra+ graphical user
+interface</a> or, alternatively, one of the other R packages from the <a href="https://github.com/rjdverse?view_as=public" class="external-link">rjdverse</a>, such as
+<a href="https://github.com/rjdverse/rjd3x13" class="external-link">rjd3x13</a> or <a href="https://github.com/rjdverse/rjd3tramoseats" class="external-link">rjd3tramoseats</a>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Example of transformation of a time series in R, by using the rjd3tramoseats </span></span>
+<span><span class="co"># package for the seasonal adjustment step</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rjdverse/rjd3tramoseats" class="external-link">rjd3tramoseats</a></span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">rjd3toolkit</span><span class="fu">::</span><span class="va"><a href="https://rjdverse.github.io/rjd3toolkit/reference/ABS.html" class="external-link">ABS</a></span><span class="op">$</span><span class="va">X0.2.09.10.M</span></span>
+<span><span class="va">sa_model</span> <span class="op">&lt;-</span> <span class="fu">rjd3tramoseats</span><span class="fu">::</span><span class="fu">tramoseats_fast</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="co"># see ?tramoseats_fast for more options </span></span>
+<span><span class="va">y_sa</span> <span class="op">&lt;-</span> <span class="va">sa_model</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">sa</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="va">y_tr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">y_sa</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p>When working dynamically, the structure of the dataset should remain
+consistent from one time to another: the number and order of columns
+must not change. Only additional rows are added reflecting the new data
+coming in.</p>
 </div>
 <div class="section level3">
 <h3 id="createupdate-model">2. Create/Update model<a class="anchor" aria-label="anchor" href="#createupdate-model"></a>
@@ -223,7 +233,7 @@ rows can be added reflecting the new data coming in.</p>
 model.</p>
 <p>The state-space representation of Dynamic Factor Model can be written
 as follows
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>y</mi><mi>t</mi></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>Z</mi><msub><mi>f</mi><mi>t</mi></msub><mo>+</mo><msub><mi>ϵ</mi><mi>t</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>ϵ</mi><mi>t</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mi>R</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>f</mi><mi>t</mi></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>A</mi><mn>1</mn></msub><msub><mi>f</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>A</mi><mi>p</mi></msub><msub><mi>f</mi><mrow><mi>t</mi><mo>−</mo><mi>p</mi></mrow></msub><mo>+</mo><msub><mi>η</mi><mi>t</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>η</mi><mi>t</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mi>Q</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>y</mi><mi>t</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>Z</mi><msub><mi>f</mi><mi>t</mi></msub><mo>+</mo><msub><mi>ϵ</mi><mi>t</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>ϵ</mi><mi>t</mi></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mi>R</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>f</mi><mi>t</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>A</mi><mn>1</mn></msub><msub><mi>f</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>A</mi><mi>p</mi></msub><msub><mi>f</mi><mrow><mi>t</mi><mo>−</mo><mi>p</mi></mrow></msub><mo>+</mo><msub><mi>η</mi><mi>t</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>η</mi><mi>t</mi></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mi>Q</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
   y_t &amp;= Z f_t + \epsilon_t, \quad \epsilon_t \sim N(0, R_t) \\
   f_t &amp;= A_1 f_{t-1} + ... + A_p f_{t-p} + \eta_t, \quad \eta_t \sim N(0, Q_t) 
@@ -352,9 +362,8 @@ three functions return the same R object, an object of class
 containing various elements.</p>
 <p>In addition to the selected algorithm, estimation speed depends on
 the size of the model. Models with one or two factors will be fastly
-estimated (in a few seconds), also when the number of variables is
-large. However, the estimation of more complex models may take minutes
-to converge.</p>
+estimated, also when the number of variables is large. However, the
+estimation of more complex models may take minutes to converge.</p>
 </div>
 <div class="section level4">
 <h4 id="prior-standardization-of-the-data">3.2. Prior standardization of the data<a class="anchor" aria-label="anchor" href="#prior-standardization-of-the-data"></a>
@@ -464,18 +473,23 @@ estimates.</p>
 </h4>
 <p>The function <code><a href="../reference/get_forecasts.html">get_forecasts()</a></code> can be used to obtain
 forecasts of the variables, as well as the forecast errors standard
-deviation. You have access to both the forecasts of the transformed
-series (see section 3.2) and the raw series. As part of the output list,
-there is also extra output referred to as ‘forecasts_only’. Those are
-just an extract of the forecasts of the raw series which contains only
-the forecasts, i.e. where the rest of the series does not appear
-together with the forecasts. Note that for quarterly series (factor type
-“Q”), the forecast at the last month of the quarter should be the one
-considered. For instance, if the variable under consideration is made of
-quarterly growth rates, each forecast figure corresponds to the growth
-rate of the last three months compared with the three previous months
-(e.g. in August, it is the estimate of the growth rate between
-June-July-August and March-April-May).</p>
+deviation. By setting the argument <code>estim_missing = TRUE</code>,
+the function also provides estimates of the missing values prior to the
+start of the forecasting period. The functions gives you access to both
+the forecasts of the transformed series (see section 3.2) and the
+original series. As part of the output list, there is also an extra
+output referred to as ‘forecasts_only’. Those are just an extract of the
+forecasts of the original series which contains only the forecasts,
+i.e. where the rest of the series does not appear along with the
+forecasts. Note that for quarterly series (factor type “Q”), the
+forecast at the last month of the quarter should be the one considered.
+For instance, if the variable under consideration is made of quarterly
+growth rates, each forecast figure corresponds to the growth rate of the
+last three months compared with the three previous months (e.g. in
+August, it is the estimate of the growth rate between June-July-August
+and March-April-May). You can set the function argument
+<code>mask_q_m = TRUE</code> to mask the estimates for the first two
+months of each quarter when the factor type is <code>Q</code>.</p>
 <p>The function <code><a href="../reference/get_forecasts.html">get_forecasts()</a></code> has two arguments. One is
 an object of class ‘JD3_DfmEstimates’ typically generated by the
 function <code><a href="../reference/estimate_pca.html">estimate_pca()</a></code>, <code><a href="../reference/estimate_em.html">estimate_em()</a></code> or
@@ -572,7 +586,7 @@ Research NO 256.</p></li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Corentin Lemasson.</p>
+  <p>Developed by Jean Palate, Corentin Lemasson.</p>
 </div>
 
 <div class="pkgdown-footer-right">

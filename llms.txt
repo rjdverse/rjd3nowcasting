@@ -13,14 +13,14 @@ near future and the very recent past.
 
 rjd3nowcasting provides helps to operationalize the process of
 nowcasting. It can be used to specify and estimate Dynamic Factor
-Models. Recent version of the package also includes news analysis. The
-way the package was conceived is inspired by the [GUI
+Models. This package also includes news analysis. The way the package
+was conceived is inspired by the [GUI
 add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for
 JDemetra+ V2.
 
 ## Installation
 
-Running rjd3 packages requires **Java 17 or higher**. How to set up such
+Running rjd3 packages requires **Java 21 or higher**. How to set up such
 a configuration in R is explained
 [here](https://jdemetra-new-documentation.netlify.app/#Rconfig)
 
@@ -31,6 +31,7 @@ To get the current stable version (from the latest release):
 - From GitHub:
 
 ``` r
+
 # install.packages("remotes")
 remotes::install_github("rjdverse/rjd3toolkit@*release")
 remotes::install_github("rjdverse/rjd3nowcasting@*release", build_vignettes = TRUE)
@@ -39,6 +40,7 @@ remotes::install_github("rjdverse/rjd3nowcasting@*release", build_vignettes = TR
 - From [r-universe](https://rjdverse.r-universe.dev/rjd3nowcasting):
 
 ``` r
+
 install.packages("rjd3nowcasting", repos = c("https://rjdverse.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
@@ -48,13 +50,15 @@ You can install the development version of **rjd3nowcasting** from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("remotes")
-remotes::install_github("rjdverse/rjd3nowcasting")
+remotes::install_github("rjdverse/rjd3nowcasting", build_vignettes = TRUE)
 ```
 
 ## Usage
 
 ``` r
+
 library("rjd3nowcasting")
 ```
 
@@ -70,6 +74,7 @@ Detailed information concerning each step can be found in the vignette.
 ### 1. Input
 
 ``` r
+
 data("data0", "data1")
 data0_ts<-ts(data0[,-1], start=c(2012,1), frequency = 12)
 data1_ts<-ts(data1[,-1], start=c(2012,1), frequency = 12)
@@ -78,6 +83,7 @@ data1_ts<-ts(data1[,-1], start=c(2012,1), frequency = 12)
 ### 2. Create or update the model
 
 ``` r
+
 ### Create a model from scratch
 ns<-ncol(data0_ts)
 types<-c("M","M","Q","YoY","YoY","M","M","YoY","YoY","YoY")
@@ -107,6 +113,7 @@ dfm1_init <- est0$dfm # R object (list) to save from one time to another
 ### 3. Estimate the model
 
 ``` r
+
 est0 <- estimate_ml(dfm0_init, data0_ts)
 # or est0<-estimate_em(dfm0_init, data0_ts)
 # or est0<-estimate_pca(dfm0_init, data0_ts) # to be avoided unless you only have monthly data
@@ -117,6 +124,7 @@ est0 <- estimate_ml(dfm0_init, data0_ts)
 #### Model and forecasts
 
 ``` r
+
 rslt0 <- get_results(est0)
 print(rslt0)
 #> $loadings
@@ -165,12 +173,14 @@ plot(fcsts0, series_name = "FR_PVI")
 ![](reference/figures/README-results-1.png)
 
 ``` r
+
 # Note: impact of Covid-19 on the model estimate could be eliminated by treating affected indicators as missing data during this period. This has not been done in this example.
 ```
 
 #### News analysis
 
 ``` r
+
 news1 <- get_news(est0, data1_ts, target_series = "FR_PVI", n_fcst = 3)
 news1$impacts
 #>          series period      expected_value     observed_value
@@ -234,36 +244,23 @@ Licence
 ## All functions
 
 - [`create_model()`](https://rjdverse.github.io/rjd3nowcasting/reference/create_model.md)
-  : Create Dynamic Factor Model
+  : Create a Dynamic Factor Model
 - [`estimate_em()`](https://rjdverse.github.io/rjd3nowcasting/reference/estimate_em.md)
-  : Estimate DFM with Expectations-Maximization algorithm
+  : Estimate a Dynamic Factor Model Using the Expectations-Maximization
+  Algorithm
 - [`estimate_ml()`](https://rjdverse.github.io/rjd3nowcasting/reference/estimate_ml.md)
-  : Estimate DFM with Maximum Likelihood
+  : Estimate a Dynamic Factor Model by Maximum Likelihood
 - [`estimate_pca()`](https://rjdverse.github.io/rjd3nowcasting/reference/estimate_pca.md)
-  : Estimate DFM with Principal components Analysis
+  : Estimate a Dynamic Factor Model Using Principal Components Analysis
 - [`get_forecasts()`](https://rjdverse.github.io/rjd3nowcasting/reference/get_forecasts.md)
-  : Get DFM forecasts
+  : Get Dynamic Factor Model Forecasts
 - [`get_news()`](https://rjdverse.github.io/rjd3nowcasting/reference/get_news.md)
-  : DFM News analysis
+  : Perform News Analysis for Forecast Updates in Dynamic Factor Models
 - [`get_results()`](https://rjdverse.github.io/rjd3nowcasting/reference/get_results.md)
-  : Get DFM results
+  : Get Dynamic Factor Model Results
 - [`data0`](https://rjdverse.github.io/rjd3nowcasting/reference/macroIndicators.md)
   [`data1`](https://rjdverse.github.io/rjd3nowcasting/reference/macroIndicators.md)
   : Datasets including some French macro-economic variables
-- [`plot(`*`<JD3_DfmForecasts>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/plot.JD3_DfmForecasts.md)
-  : Plot function for objects of class 'JD3_DfmForecasts'
-- [`plot(`*`<JD3_DfmNews>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/plot.JD3_DfmNews.md)
-  : Plot function for objects of class 'JD3_DfmNews'
-- [`print(`*`<JD3_DfmEstimates>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmEstimates.md)
-  : Print function for objects of class 'JD3_DfmEstimates'
-- [`print(`*`<JD3_DfmForecasts>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmForecasts.md)
-  : Print function for objects of class 'JD3_DfmForecasts'
-- [`print(`*`<JD3_DfmNews>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmNews.md)
-  : Print function for objects of class 'JD3_DfmNews'
-- [`print(`*`<JD3_DfmResults>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/print.JD3_DfmResults.md)
-  : Print function for objects of class 'JD3_DfmResults'
-- [`summary(`*`<JD3_DfmNews>`*`)`](https://rjdverse.github.io/rjd3nowcasting/reference/summary.JD3_DfmNews.md)
-  : Summary function for objects of class 'JD3_DfmNews'
 
 # Articles
 

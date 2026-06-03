@@ -12,43 +12,35 @@ how the real-time dataflow updates expectations, as for instance in
 
 ## Introduction
 
-This package can be use to specify and estimate Dynamic Factor Models in
-a very efficient way to provide consistent forecasts. Recent version of
-the package also includes news analysis. Analyzing news, which are
-defined as the discrepancy between the newly released figures and its
-forecasts, helps to interpret forecast revisions. As mentioned by
-Banbura and Modugno (2010), it enables us to produce statements like
+This package can be use to specify and estimate Dynamic Factor Models
+(DFM) in a very efficient way to provide consistent forecasts. Recent
+version of the package also includes news analysis. Analyzing news,
+which are defined as the discrepancy between the newly released figures
+and its forecasts, helps to interpret forecast revisions. As mentioned
+by Banbura and Modugno (2010), it enables us to produce statements like
 “the forecast was revised up by … because of higher than expected
 release of …”.
 
 This R package uses the efficient libraries of [JDemetra+
 v3](https://github.com/jdemetra/jdplus-nowcasting). The way the package
-was conceived is inspired by the [GUI
+was conceived is inspired by the [JDemetra+ graphical user interface
 add-in](https://github.com/nbbrd/jdemetra-nowcasting) developed for
-JDemetra+ V2 and it provides about the same functionality (except for
+JDemetra+ v2 and it provides about the same functionality (except for
 the real-time simulation), but in the flexible R environment.
 
 ## Installation settings
 
 This package relies on the specific Java libraries of [JDemetra+
 v3](https://github.com/jdemetra/jdplus-nowcasting) and on the package
-[rjd3toolkit](https://github.com/rjdemetra/rjd3toolkit) of
+[rjd3toolkit](https://github.com/rjdemetra/rjd3toolkit) of the
 [rjdverse](https://github.com/rjdverse?view_as=public). Prior the
-installation, you must ensure to have a Java version \>= 17.0 on your
+installation, you must ensure to have a Java version \>= 21.0 on your
 computer. If you need to use a portable version of Java to fill this
 request, you can follow the instructions in the [installation
 manual](https://jdemetra-new-documentation.netlify.app/#Rconfig).
 
-In addition to a Java version \>= 17.0, you must have a recent version
-of the R packages rJava (\>= 1.0.6) and RProtobuf (\>=0.4.17) that you
-can download from CRAN.
-
-The package [rjd3nowcasting](https://github.com/rjdverse/rjd3nowcasting)
-depends on the package
-[rjd3toolkit](https://github.com/rjdverse/rjd3toolkit) that you must
-install from GitHub beforehand.
-
 ``` r
+
 
 # To get the current stable version (from the latest release):
 ### install.packages("remotes")
@@ -66,6 +58,7 @@ packages from CRAN.
 ## Usage
 
 ``` r
+
 library(rjd3nowcasting)
 ```
 
@@ -76,12 +69,13 @@ Once the package is loaded, there are four steps to follow:
 3.  Estimate the model
 4.  Get results
 
-Detailed information concerning each step follows below the example.
+Detailed information concerning each step follows below this example.
 
 ``` r
+
 # Quick start example
 
-## 1. Data
+## 1. Data (stationary data is generated, no transformation needed)
 set.seed(100)
 data0 <- stats::ts(
     data = matrix(rnorm(500), 100, 5),
@@ -148,16 +142,37 @@ plot(news1)
 
 ### 1. Prepare and import data
 
-This step is external to the package. Recall that DFM require all input
-data to be stationary. Once the data have been prepared accordingly and
-imported in R, it is required to create a time-series object with the
-data by using the well-known
-[`stats::ts()`](https://rdrr.io/r/stats/ts.html) function like in the
-example.
+This step needs to be carried out outside of this package. Recall that
+Dynamic Factor Models require the input data to be stationary. Once the
+data have been appropriately transformed (when necessary) and imported
+in R, it is required to create a multivariate time-series object with
+the data by using the [`stats::ts()`](https://rdrr.io/r/stats/ts.html)
+function, as illustrated in the example.
 
-In case of dynamic work, the columns of the dataset should remain the
-same from one time to another and in the same order. Only additional
-rows can be added reflecting the new data coming in.
+A typical transformation workflow first involves applying a seasonal
+adjustment to the data, followed by taking difference of logarithms. For
+the seasonal adjustment step, we recommend using either the [JDemetra+
+graphical user interface](https://github.com/jdemetra/jdplus-main) or,
+alternatively, one of the other R packages from the
+[rjdverse](https://github.com/rjdverse?view_as=public), such as
+[rjd3x13](https://github.com/rjdverse/rjd3x13) or
+[rjd3tramoseats](https://github.com/rjdverse/rjd3tramoseats).
+
+``` r
+
+# Example of transformation of a time series in R, by using the rjd3tramoseats 
+# package for the seasonal adjustment step
+library(rjd3tramoseats)
+y <- rjd3toolkit::ABS$X0.2.09.10.M
+sa_model <- rjd3tramoseats::tramoseats_fast(y) # see ?tramoseats_fast for more options 
+y_sa <- sa_model$final$sa$data
+y_tr <- diff(log(y_sa), 1)
+```
+
+When working dynamically, the structure of the dataset should remain
+consistent from one time to another: the number and order of columns
+must not change. Only additional rows are added reflecting the new data
+coming in.
 
 ### 2. Create/Update model
 
@@ -168,14 +183,18 @@ The function
 enables you to build a new model.
 
 The state-space representation of Dynamic Factor Model can be written as
-follows $$\begin{aligned}
-y_{t} & {= Zf_{t} + \epsilon_{t},\quad\epsilon_{t} \sim N\left( 0,R_{t} \right)} \\
-f_{t} & {= A_{1}f_{t - 1} + ... + A_{p}f_{t - p} + \eta_{t},\quad\eta_{t} \sim N\left( 0,Q_{t} \right)}
-\end{aligned}$$ where the measurement equation links the observations to
-the underlying factors. Those factors, as shown in the second equation,
-follow a VAR process of order p. The number of factors to consider and
-the order p of the VAR process are to be defined in the first two
-arguments of the function
+follows
+``` math
+\begin{aligned}
+  y_t &= Z f_t + \epsilon_t, \quad \epsilon_t \sim N(0, R_t) \\
+  f_t &= A_1 f_{t-1} + ... + A_p f_{t-p} + \eta_t, \quad \eta_t \sim N(0, Q_t) 
+\end{aligned}
+```
+where the measurement equation links the observations to the underlying
+factors. Those factors, as shown in the second equation, follow a VAR
+process of order p. The number of factors to consider and the order p of
+the VAR process are to be defined in the first two arguments of the
+function
 [`create_model()`](https://rjdverse.github.io/rjd3nowcasting/reference/create_model.md).
 
 The third argument `factors_type` defines the link between the series
@@ -299,9 +318,8 @@ containing various elements.
 
 In addition to the selected algorithm, estimation speed depends on the
 size of the model. Models with one or two factors will be fastly
-estimated (in a few seconds), also when the number of variables is
-large. However, the estimation of more complex models may take minutes
-to converge.
+estimated, also when the number of variables is large. However, the
+estimation of more complex models may take minutes to converge.
 
 #### 3.2. Prior standardization of the data
 
@@ -424,18 +442,23 @@ to the parameters estimates.
 The function
 [`get_forecasts()`](https://rjdverse.github.io/rjd3nowcasting/reference/get_forecasts.md)
 can be used to obtain forecasts of the variables, as well as the
-forecast errors standard deviation. You have access to both the
-forecasts of the transformed series (see section 3.2) and the raw
-series. As part of the output list, there is also extra output referred
-to as ‘forecasts_only’. Those are just an extract of the forecasts of
-the raw series which contains only the forecasts, i.e. where the rest of
-the series does not appear together with the forecasts. Note that for
-quarterly series (factor type “Q”), the forecast at the last month of
-the quarter should be the one considered. For instance, if the variable
-under consideration is made of quarterly growth rates, each forecast
-figure corresponds to the growth rate of the last three months compared
-with the three previous months (e.g. in August, it is the estimate of
-the growth rate between June-July-August and March-April-May).
+forecast errors standard deviation. By setting the argument
+`estim_missing = TRUE`, the function also provides estimates of the
+missing values prior to the start of the forecasting period. The
+functions gives you access to both the forecasts of the transformed
+series (see section 3.2) and the original series. As part of the output
+list, there is also an extra output referred to as ‘forecasts_only’.
+Those are just an extract of the forecasts of the original series which
+contains only the forecasts, i.e. where the rest of the series does not
+appear along with the forecasts. Note that for quarterly series (factor
+type “Q”), the forecast at the last month of the quarter should be the
+one considered. For instance, if the variable under consideration is
+made of quarterly growth rates, each forecast figure corresponds to the
+growth rate of the last three months compared with the three previous
+months (e.g. in August, it is the estimate of the growth rate between
+June-July-August and March-April-May). You can set the function argument
+`mask_q_m = TRUE` to mask the estimates for the first two months of each
+quarter when the factor type is `Q`.
 
 The function
 [`get_forecasts()`](https://rjdverse.github.io/rjd3nowcasting/reference/get_forecasts.md)
