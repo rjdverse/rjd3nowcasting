@@ -2,29 +2,54 @@
 % Please edit documentation in R/results.R
 \name{get_results}
 \alias{get_results}
-\title{Get DFM results}
+\title{Get Dynamic Factor Model Results}
 \usage{
 get_results(dfm_estimates)
 }
 \arguments{
-\item{dfm_estimates}{an object of class 'JD3_DfmEstimates'}
+\item{dfm_estimates}{An object of class \code{"JD3_DFMESTIMATES"}, typically generated using the \code{estimate_ml()}, \code{estimate_em()}, or \code{estimate_pca()} function.}
 }
 \value{
-an object of class 'JD3_DfmResults'
+An object of class \code{"JD3_DFMRESULTS"} is returned. The following are
+returned invisibly as a list:
+\itemize{
+\item \code{preprocessing} \verb{[[1]]} the original and transformed data, along with the sample mean and standard deviation used for standardization;
+\item \code{parameters} \verb{[[2]]} the estimated parameters, the variance of the measurement errors, and the variance-covariance matrix of the VAR errors;
+\item \code{factors} \verb{[[3]]} the estimated factors and their standard deviations;
+\item \code{residuals} \verb{[[4]]} the residuals and the standardized residuals for diagnostic checks;
+\item \code{likelihood} \verb{[[5]]} the estimated log-likelihood and a Boolean indicating whether the estimation has converged.
+}
 }
 \description{
-Get DFM results
+Provides access to estimation results, including pre-processing (e.g.,
+standardization input for dynamic workflows), parameter and factor estimates,
+residuals, and likelihood.
 }
 \examples{
+\dontshow{if (rjd3toolkit::get_java_version() >= rjd3toolkit::minimal_java_version) withAutoprint(\{ # examplesIf}
 set.seed(100)
-data<-ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010,1))
-data[100,1]<-data[99:100,2]<-data[(1:100)[-seq(3,100,3)],5]<-NA
-dfm <- create_model(nfactors=2,
-                    nlags=2,
-                    factors_type = c("M", "M", "YoY", "M", "Q"),
-                    factors_loading = matrix(data=TRUE, 5, 2),
-                    var_init = "Unconditional")
-est_em<-estimate_em(dfm, data)
-rslt_em<-get_results(est_em)
+data <- ts(matrix(rnorm(500), 100, 5),
+           frequency = 12,
+           start = c(2010, 1))
+data[100, 1] <- data[99:100, 2] <- data[(1:100)[-seq(3, 100, 3)], 5] <- NA
 
+dfm <- create_model(
+    nfactors = 2,
+    nlags = 2,
+    factors_type = c("M", "M", "YoY", "M", "Q"),
+    factors_loading = matrix(data = TRUE, 5, 2),
+    var_init = "Unconditional"
+)
+
+est_em <- estimate_em(dfm, data)
+
+rslt_em <- get_results(est_em)
+\dontshow{\}) # examplesIf}
+}
+\seealso{
+\code{get_forecasts()} to obtain forecast results.
+
+For more information, see the vignette:
+
+\code{utils::browseVignettes()}, e.g. \code{browseVignettes(package = "rjd3nowcasting")}
 }
