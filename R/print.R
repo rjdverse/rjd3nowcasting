@@ -1,5 +1,5 @@
 #' @include utils.R
-#' @importFrom stats ts.plot start window cycle
+#' @importFrom stats ts.plot start
 #' @importFrom graphics axis legend par barplot points lines
 #' @importFrom grDevices palette.colors colorRampPalette
 NULL
