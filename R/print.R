@@ -6,11 +6,12 @@ NULL
 
 #' @export
 print.JD3_DFMESTIMATES <- function(x, ...) {
-    print(list(
-        has_converged = toupper(x$has_converged),
-        log_likelihood = x$log_likelihood,
-        ...
-    ))
+    cat("DFM Estimates\n")
+    cat(strrep("-", 20), "\n", sep = "")
+    cat(sprintf("Has converged: %s\n", toupper(x$has_converged)))
+    cat(sprintf("Log-likelihood: %.4f\n", x$log_likelihood))
+
+    invisible(x)
 }
 
 #' @export
@@ -19,84 +20,50 @@ print.JD3_DFMRESULTS <- function(x, ...){
     sample_mean_stdev <- round(x$preprocessing$sample_mean_stdev, 3)
     param_mcoeff <- round(x$parameters$measurement_coefficients, 3)
     param_mvar <- round(x$parameters$measurement_errors_variance, 3)
+
     loadings <- cbind(sample_mean_stdev, param_mcoeff, param_mvar)
-    colnames(loadings) <- c("Sample mean",
-                            "Stdev",
-                            paste0("Coeff. ", colnames(param_mcoeff)),
-                            "Idiosyncratic variance")
+    colnames(loadings) <- c(
+        "Sample mean",
+        "Stdev",
+        paste0("Coeff. ", colnames(param_mcoeff)),
+        "Idiosyncratic variance"
+    )
 
-    print(list(
-        loadings = loadings,
-        VAR_model = round(x$parameters$var_coefficients, 3),
-        Innovative_variance = round(x$parameters$var_errors_variance, 3),
-        ...
-    ))
+    var_coef <- round(x$parameters$var_coefficients, 3)
+    var_err_variance <- round(x$parameters$var_errors_variance, 3)
+
+    cat("DFM Results\n")
+    cat(strrep("-", 20), "\n", sep = "")
+
+    cat("\nLoadings:\n")
+    print(loadings)
+    cat("\nVAR Model:\n")
+    print(var_coef)
+    cat("\nInnovative Variance:\n")
+    print(var_err_variance)
+
+    invisible(x)
 }
 
 #' @export
-print.JD3_DFMFORECASTS <- function(x, ...){
-    print(list(forecasts_only = x$forecasts_only, ...))
+print.JD3_DFMFORECASTS <- function(x, ...) {
+    cat("DFM Forecasts (forecasts only)\n")
+    cat(strrep("-", 30), "\n", sep = "")
+    print(x$forecasts_only)
+
+    invisible(x)
 }
-
-#' @export
-plot.JD3_DFMFORECASTS <- function(x, series_name = NULL, ...){
-
-    fcst <- x$forecasts
-    fcst_stdev <- x$forecasts_stdev
-    fcst_only <- x$forecasts_only
-
-    if (is.null(series_name)) {
-        series_name <- colnames(fcst)[1]
-    }
-
-    if (series_name %in% colnames(fcst)) {
-        s <- fcst[, series_name]
-        s_lb <- s - 1.28 * fcst_stdev[, series_name]
-        s_ub <- s + 1.28 * fcst_stdev[, series_name]
-        sf <- fcst_only[, series_name]
-    } else {
-        stop("series name not found!")
-    }
-
-    stats::ts.plot(
-        s_lb,
-        s_ub,
-        s,
-        sf,
-        gpars = list(
-            main = series_name,
-            sub = "Forecasts with a 80% prediction interval",
-            xlab = "",
-            ylab = "",
-            lty = c(3, 3, 1, 1),
-            xaxt = "n",
-            type = "o",
-            pch = 20,
-            cex = 0.8,
-            las = 2,
-            col = c("orange", "orange", "black", "red"),
-            ...
-        )
-    )
-    graphics::axis(1,
-                   at = seq(stats::start(s)[1], stats::end(s)[1], by = 1),
-                   las = 2)
-    graphics::legend(
-        "topleft",
-        legend = c("series", "forecasts", "80% PI"),
-        col = c("black", "red", "orange"),
-        lty = c(1, 1, 3),
-        cex = 0.8
-    )
-}
-
 
 #' @export
 print.JD3_DFMNEWS <- function(x, ...){
-    summary(x)
-    print(list(forecasts = round(x$forecasts,3), ...))
-}
+    cat("DFM NEWS\n")
+    cat(strrep("-", 20), "\n", sep = "")
 
+    summary(x)
+
+    cat("\nForecasts:\n")
+    print(round(x$forecasts, 3))
+}
 
 #' @export
 summary.JD3_DFMNEWS <- function(object, ...) {
@@ -127,13 +94,62 @@ summary.JD3_DFMNEWS <- function(object, ...) {
     # Final summary
     summary_news <- cbind(base, wi_mat)
 
-    print(
-        list(
-            target_series = x$target_series,
-            summary_news = summary_news,
-            ...
-        ),
-        row.names = FALSE
+    cat("\nTarget series:\n")
+    cat(x$target_series, "\n")
+    cat("\nNews analysis:\n")
+    print(summary_news, row.names = FALSE)
+
+    invisible(x)
+}
+
+#' @export
+plot.JD3_DFMFORECASTS <- function(x, series_name = NULL, ...){
+
+    fcst <- x$forecasts
+    fcst_stdev <- x$forecasts_stdev
+    fcst_only <- x$forecasts_only
+
+    if (is.null(series_name)) {
+        series_name <- colnames(fcst)[1]
+    }
+
+    if (!(series_name %in% colnames(fcst))) {
+        stop("series name not found!")
+    }
+
+    s <- fcst[, series_name]
+    s_lb <- s - 1.28 * fcst_stdev[, series_name]
+    s_ub <- s + 1.28 * fcst_stdev[, series_name]
+    sf <- fcst_only[, series_name]
+
+    stats::ts.plot(
+        s_lb,
+        s_ub,
+        s,
+        sf,
+        gpars = list(
+            main = series_name,
+            sub = "Forecasts with a 80% prediction interval",
+            xlab = "",
+            ylab = "",
+            lty = c(3, 3, 1, 1),
+            xaxt = "n",
+            type = "o",
+            pch = 20,
+            cex = 0.8,
+            las = 2,
+            col = c("orange", "orange", "black", "red")
+        )
+    )
+    graphics::axis(1,
+                   at = seq(stats::start(s)[1], stats::end(s)[1], by = 1),
+                   las = 2)
+    graphics::legend(
+        "topleft",
+        legend = c("series", "forecasts", "80% PI"),
+        col = c("black", "red", "orange"),
+        lty = c(1, 1, 3),
+        cex = 0.8
     )
 }
 
