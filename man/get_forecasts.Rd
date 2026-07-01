@@ -2,31 +2,66 @@
 % Please edit documentation in R/results.R
 \name{get_forecasts}
 \alias{get_forecasts}
-\title{Get DFM forecasts}
+\title{Get Dynamic Factor Model Forecasts}
 \usage{
-get_forecasts(dfm_estimates, n_fcst = 3)
+get_forecasts(
+  dfm_estimates,
+  n_fcst = 3,
+  estim_missing = FALSE,
+  mask_q_m = FALSE
+)
 }
 \arguments{
-\item{dfm_estimates}{an object of class 'JD3_DfmEstimates'}
+\item{dfm_estimates}{An object of class \code{"JD3_DFMESTIMATES"}, typically generated using the \code{estimate_ml()}, \code{estimate_em()}, or \code{estimate_pca()} function.}
 
-\item{n_fcst}{Integer. Number of forecast periods required.}
+\item{n_fcst}{Integer. Number of forecast periods to consider. The default is \code{3}.}
+
+\item{estim_missing}{Boolean. Indicates whether missing values should be estimated prior to the start of the forecasting period. The default is \code{FALSE}.}
+
+\item{mask_q_m}{Boolean. Indicates whether estimates for the first two months of each quarter should be masked when the factor type is \code{Q}. The default is \code{FALSE}.}
 }
 \value{
-an object of class 'JD3_DfmForecasts'
+An object of class \code{"JD3_DFMFORECASTS"} is returned. The following are
+returned invisibly as a list:
+\itemize{
+\item \code{transformed_forecasts} \verb{[[1]]} the transformed series together with their forecasts;
+\item \code{transformed_forecasts_stdev} \verb{[[2]]} standard deviations of the transformed series and their forecasts;
+\item \code{forecasts} \verb{[[3]]} the original series together with their forecasts;
+\item \code{forecasts_stdev} \verb{[[4]]} standard deviations of the original series and their forecasts;
+\item \code{forecasts_only} \verb{[[5]]} the forecasts of the original series;
+\item \code{forecasts_only_stdev} \verb{[[6]]} standard deviations of the forecasts of the original series.
+}
 }
 \description{
-Get DFM forecasts
+Provides access to forecasts and their associated standard deviations for
+both the original and transformed series. Optional argument allows to include
+the missing values estimate in the output.
 }
 \examples{
+\dontshow{if (rjd3toolkit::get_java_version() >= rjd3toolkit::minimal_java_version) withAutoprint(\{ # examplesIf}
 set.seed(100)
-data<-ts(matrix(rnorm(500), 100, 5), frequency = 12, start = c(2010,1))
-data[100,1]<-data[99:100,2]<-data[(1:100)[-seq(3,100,3)],5]<-NA
-dfm <- create_model(nfactors=2,
-                    nlags=2,
-                    factors_type = c("M", "M", "YoY", "M", "Q"),
-                    factors_loading = matrix(data=TRUE, 5, 2),
-                    var_init = "Unconditional")
-est_em<-estimate_em(dfm, data)
-fcst<-get_forecasts(est_em, n_fcst = 2)
+data <- ts(matrix(rnorm(500), 100, 5),
+           frequency = 12,
+           start = c(2010, 1))
+data[100, 1] <- data[99:100, 2] <- data[(1:100)[-seq(3, 100, 3)], 5] <- NA
 
+dfm <- create_model(
+    nfactors = 2,
+    nlags = 2,
+    factors_type = c("M", "M", "YoY", "M", "Q"),
+    factors_loading = matrix(data = TRUE, 5, 2),
+    var_init = "Unconditional"
+)
+
+est_em <- estimate_em(dfm, data)
+
+fcsts_em <- get_forecasts(est_em, n_fcst = 2)
+\dontshow{\}) # examplesIf}
+}
+\seealso{
+\code{get_results()} to obtain estimation results.
+
+For more information, see the vignette:
+
+\code{utils::browseVignettes()}, e.g. \code{browseVignettes(package = "rjd3nowcasting")}
 }
