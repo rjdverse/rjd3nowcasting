@@ -79,7 +79,7 @@ values obtained from the Expectations-Maximization (EM) algorithm by default.
 The function includes optional arguments to tune the estimation process.
 }
 \examples{
-\dontshow{if (rjd3toolkit::get_java_version() >= rjd3toolkit::minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 # input data
 set.seed(100)
 data <- ts(matrix(rnorm(500), 100, 5),
