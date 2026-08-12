@@ -63,6 +63,8 @@ print.JD3_DFMNEWS <- function(x, ...){
 
     cat("\nForecasts:\n")
     print(round(x$forecasts, 3))
+
+    invisible(x)
 }
 
 #' @export
@@ -151,6 +153,8 @@ plot.JD3_DFMFORECASTS <- function(x, series_name = NULL, ...){
         lty = c(1, 1, 3),
         cex = 0.8
     )
+
+    invisible(x)
 }
 
 #' @export
@@ -234,4 +238,6 @@ plot.JD3_DFMNEWS <- function(x, ...) {
         col = c(plot_colors, "red"),
         pch = c(rep(15, nr - 1), 3)
     )
+
+    invisible(x)
 }
