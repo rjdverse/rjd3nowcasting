@@ -28,7 +28,7 @@ NULL
 #'
 #' `utils::browseVignettes()`, e.g. `browseVignettes(package = "rjd3nowcasting")`
 #'
-#' @examplesIf rjd3toolkit::get_java_version() >= rjd3toolkit::minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' set.seed(100)
 #' data <- ts(matrix(rnorm(500), 100, 5),
 #'            frequency = 12,
@@ -98,7 +98,7 @@ get_results <- function(dfm_estimates) {
 #'
 #' `utils::browseVignettes()`, e.g. `browseVignettes(package = "rjd3nowcasting")`
 #'
-#' @examplesIf rjd3toolkit::get_java_version() >= rjd3toolkit::minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' set.seed(100)
 #' data <- ts(matrix(rnorm(500), 100, 5),
 #'            frequency = 12,

@@ -45,7 +45,7 @@ NULL
 #' Banbura, M., & Modugno, M. (2010). Maximum likelihood estimation of factor
 #' models on data sets with arbitrary patterns of missing data.
 #'
-#' @examplesIf rjd3toolkit::get_java_version() >= rjd3toolkit::minimal_java_version
+#' @examplesIf rjd3jars::check_java_version(silent = TRUE)
 #' set.seed(100)
 #' data_t1 <- ts(matrix(rnorm(500), 100, 5),
 #'               frequency = 12,
