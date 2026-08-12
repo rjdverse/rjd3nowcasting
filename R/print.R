@@ -223,7 +223,7 @@ plot.JD3_DFMNEWS <- function(x, ...) {
         add = TRUE,
         ylim = rev(impacts_range),
         col =  plot_colors,
-        las = 1,
+        las = 1
     )
 
     # Overlay total impact
