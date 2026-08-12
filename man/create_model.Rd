@@ -65,7 +65,7 @@ between each series and the latent factors, in addition to defining the
 factor loading structure.
 }
 \examples{
-\dontshow{if (rjd3toolkit::get_java_version() >= rjd3toolkit::minimal_java_version) withAutoprint(\{ # examplesIf}
+\dontshow{if (rjd3jars::check_java_version(silent = TRUE)) withAutoprint(\{ # examplesIf}
 # From scratch
 dfm1 <- create_model(nfactors = 2,
                      nlags = 2,
