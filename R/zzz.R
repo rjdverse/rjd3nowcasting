@@ -15,7 +15,7 @@ NULL
     rJava::.jaddClassPath(jars)
 
     result <- rJava::.jpackage(pkgname, lib.loc = libname)
-    if (!result) stop("Loading java packages failed", call. = FALSE)
+    if (!result) stop("Loading Java packages failed", call. = FALSE)
 
     if (rjd3toolkit::get_java_version() >= rjd3toolkit::minimal_java_version) {
         rjd3toolkit::reload_dictionaries()
