@@ -75,7 +75,7 @@ e.g. `browseVignettes(package = "rjd3nowcasting")`
 ## Examples
 
 ``` r
-if (FALSE) { # rjd3toolkit::get_java_version() >= rjd3toolkit::minimal_java_version
+if (FALSE) { # rjd3jars::check_java_version(silent = TRUE)
 set.seed(100)
 data <- ts(matrix(rnorm(500), 100, 5),
            frequency = 12,
